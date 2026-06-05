@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generatore Tutela Legale — Vittoria Assicurazioni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --navy:#1F3864;
+  --blue:#2E5FA3;
+  --blueL:#4472C4;
+  --orange:#C55A11;
+  --orangeL:#ED7D31;
+  --red:#C00000;
+  --green:#375623;
+  --greenL:#70AD47;
+  --gold:#FFC000;
+  --white:#FFFFFF;
+  --offwhite:#F7F9FC;
+  --gray1:#F2F2F2;
+  --gray2:#E2E8F0;
+  --gray3:#94A3B8;
+  --gray4:#64748B;
+  --dark:#1E293B;
+  --sidebar:260px;
+  --font-display:'DM Serif Display',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --radius:10px;
+  --radius-lg:16px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.06);
+  --shadow-lg:0 4px 24px rgba(0,0,0,.12);
+}
+
+body{font-family:var(--font-body);background:var(--offwhite);color:var(--dark);min-height:100vh;display:flex;flex-direction:column}
+
+/* ── Layout ── */
+.app{display:flex;min-height:100vh}
+
+.sidebar{width:var(--sidebar);background:var(--navy);flex-shrink:0;display:flex;flex-direction:column;padding:0}
+.sidebar-logo{padding:1.5rem 1.25rem 1rem;border-bottom:1px solid rgba(255,255,255,.1)}
+.sidebar-logo .brand{font-family:var(--font-display);font-size:1.1rem;color:#fff;line-height:1.2}
+.sidebar-logo .sub{font-size:.7rem;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+
+.sidebar-nav{flex:1;padding:1.25rem .75rem;display:flex;flex-direction:column;gap:4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:.6rem .9rem;border-radius:8px;cursor:pointer;transition:background .15s;font-size:.85rem;color:rgba(255,255,255,.65);border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-item.active{background:rgba(255,255,255,.14);color:#fff;font-weight:500}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;opacity:.8}
+.nav-section{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);padding:.9rem .9rem .3rem;font-weight:600}
+
+.sidebar-footer{padding:1rem 1.25rem;border-top:1px solid rgba(255,255,255,.1)}
+.sidebar-footer .api-label{font-size:.7rem;color:rgba(255,255,255,.4);margin-bottom:5px;letter-spacing:.05em;text-transform:uppercase}
+.api-input{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:.45rem .7rem;color:#fff;font-size:.75rem;font-family:var(--font-body);outline:none}
+.api-input::placeholder{color:rgba(255,255,255,.3)}
+.api-input:focus{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.12)}
+
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+.topbar{background:#fff;border-bottom:1px solid var(--gray2);padding:.85rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-title{font-size:1rem;font-weight:600;color:var(--dark)}
+.topbar-sub{font-size:.78rem;color:var(--gray4);margin-top:1px}
+.topbar-badge{background:rgba(197,90,17,.1);color:var(--orange);font-size:.72rem;font-weight:600;padding:.25rem .65rem;border-radius:20px;letter-spacing:.03em}
+
+.content{flex:1;overflow-y:auto;padding:2rem}
+
+/* ── Views ── */
+.view{display:none}
+.view.active{display:block}
+
+/* ── Form ── */
+.form-card{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--gray2);box-shadow:var(--shadow);overflow:hidden;max-width:820px}
+.form-header{padding:1.5rem 2rem;border-bottom:1px solid var(--gray2);display:flex;align-items:center;gap:14px}
+.form-header-icon{width:40px;height:40px;background:rgba(31,56,100,.08);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.form-header-icon svg{width:20px;height:20px;color:var(--navy)}
+.form-header-title{font-size:1rem;font-weight:600;color:var(--dark)}
+.form-header-sub{font-size:.78rem;color:var(--gray4)}
+
+.form-body{padding:1.75rem 2rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.form-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
+.form-grid.full{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.span2{grid-column:span 2}
+.label{font-size:.78rem;font-weight:500;color:var(--gray4);letter-spacing:.02em}
+.label .req{color:var(--orange)}
+input[type=text],input[type=number],select,textarea{
+  width:100%;padding:.6rem .85rem;border:1px solid var(--gray2);border-radius:8px;
+  font-family:var(--font-body);font-size:.88rem;color:var(--dark);background:#fff;
+  outline:none;transition:border-color .15s,box-shadow .15s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--blueL);box-shadow:0 0 0 3px rgba(68,114,196,.12)}
+select{cursor:pointer}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
+.input-hint{font-size:.72rem;color:var(--gray3)}
+
+.form-section-title{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gray4);padding-bottom:.6rem;border-bottom:1px solid var(--gray2);margin-bottom:1.25rem}
+
+/* Upload zone */
+.upload-zone{border:1.5px dashed var(--gray2);border-radius:var(--radius);padding:1.5rem;text-align:center;cursor:pointer;transition:all .15s;background:var(--offwhite);position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--blueL);background:rgba(68,114,196,.04)}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-zone svg{width:28px;height:28px;color:var(--gray3);margin:0 auto .5rem}
+.upload-zone .uz-title{font-size:.85rem;font-weight:500;color:var(--gray4)}
+.upload-zone .uz-sub{font-size:.75rem;color:var(--gray3);margin-top:3px}
+.upload-zone.has-file{border-style:solid;border-color:var(--greenL);background:rgba(112,173,71,.05)}
+.upload-zone.has-file .uz-title{color:var(--green)}
+
+/* Premi */
+.premi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
+.premio-card{border:1px solid var(--gray2);border-radius:var(--radius);padding:.9rem 1rem;position:relative}
+.premio-card .pk-label{font-size:.72rem;font-weight:600;color:var(--gray4);margin-bottom:.4rem;display:flex;align-items:center;gap:6px}
+.premio-card .pk-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.premio-card input{border:none;border-bottom:1px solid var(--gray2);border-radius:0;padding:.3rem 0;font-size:1.05rem;font-weight:500;color:var(--dark);background:transparent}
+.premio-card input:focus{box-shadow:none;border-color:var(--blueL)}
+.euro-prefix{font-size:.85rem;color:var(--gray3);margin-right:3px}
+
+/* RC esistente toggle */
+.toggle-group{display:flex;gap:8px}
+.toggle-btn{flex:1;padding:.5rem;border:1px solid var(--gray2);border-radius:8px;font-size:.83rem;font-weight:500;cursor:pointer;background:#fff;color:var(--gray4);transition:all .15s;text-align:center}
+.toggle-btn.active-yes{border-color:var(--greenL);background:rgba(112,173,71,.08);color:var(--green)}
+.toggle-btn.active-no{border-color:var(--orange);background:rgba(197,90,17,.06);color:var(--orange)}
+
+.form-actions{padding:1.25rem 2rem;border-top:1px solid var(--gray2);display:flex;align-items:center;justify-content:space-between;background:var(--offwhite)}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:.65rem 1.4rem;border-radius:8px;font-family:var(--font-body);font-size:.88rem;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:hover{background:#16284d;transform:translateY(-1px);box-shadow:0 4px 12px rgba(31,56,100,.3)}
+.btn-primary:disabled{background:var(--gray3);cursor:not-allowed;transform:none;box-shadow:none}
+.btn-secondary{background:#fff;color:var(--gray4);border:1px solid var(--gray2)}
+.btn-secondary:hover{background:var(--gray1);border-color:var(--gray3)}
+.btn-orange{background:var(--orange);color:#fff}
+.btn-orange:hover{background:#a84a0d}
+.btn svg{width:16px;height:16px;flex-shrink:0}
+
+/* ── Generating ── */
+#generatingView{max-width:820px}
+.gen-card{background:#fff;border:1px solid var(--gray2);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:2rem}
+.gen-header{display:flex;align-items:center;gap:14px;margin-bottom:1.75rem}
+.gen-spinner{width:36px;height:36px;border:3px solid var(--gray2);border-top-color:var(--navy);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gen-title{font-size:1rem;font-weight:600;color:var(--dark)}
+.gen-sub{font-size:.8rem;color:var(--gray4)}
+.gen-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:1.75rem}
+.gen-step{display:flex;align-items:center;gap:10px;padding:.65rem 1rem;border-radius:8px;font-size:.85rem;transition:all .3s}
+.gen-step.waiting{background:var(--gray1);color:var(--gray3)}
+.gen-step.active{background:rgba(31,56,100,.07);color:var(--navy);font-weight:500}
+.gen-step.done{background:rgba(112,173,71,.08);color:var(--green)}
+.gen-step .gs-icon{width:20px;height:20px;flex-shrink:0}
+.gen-progress{height:4px;background:var(--gray2);border-radius:4px;overflow:hidden;margin-top:1rem}
+.gen-progress-bar{height:100%;background:linear-gradient(90deg,var(--navy),var(--blueL));border-radius:4px;transition:width .4s ease;width:0}
+
+/* ── Output ── */
+#outputView{max-width:960px}
+.output-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;gap:1rem}
+.output-title{font-family:var(--font-display);font-size:1.6rem;color:var(--navy)}
+.output-meta{font-size:.8rem;color:var(--gray4);margin-top:4px}
+.output-actions{display:flex;gap:8px;flex-shrink:0}
+
+.output-tabs{display:flex;gap:0;border:1px solid var(--gray2);border-radius:10px;overflow:hidden;margin-bottom:1.25rem;background:var(--gray1)}
+.otab{padding:.6rem 1.2rem;font-size:.83rem;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--gray4);transition:all .15s}
+.otab.active{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+
+.output-content{background:#fff;border:1px solid var(--gray2);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:2rem;min-height:400px}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* Analysis output */
+.analysis-text{font-size:.9rem;line-height:1.75;color:var(--dark)}
+.analysis-text h1{font-family:var(--font-display);font-size:1.4rem;color:var(--navy);margin:1.5rem 0 .75rem;padding-bottom:.5rem;border-bottom:2px solid var(--gray2)}
+.analysis-text h1:first-child{margin-top:0}
+.analysis-text h2{font-size:1rem;font-weight:600;color:var(--blue);margin:1.25rem 0 .5rem}
+.analysis-text h3{font-size:.9rem;font-weight:600;color:var(--orange);margin:1rem 0 .4rem}
+.analysis-text p{margin-bottom:.75rem}
+.analysis-text ul{margin:.5rem 0 .75rem 1.2rem}
+.analysis-text ul li{margin-bottom:.3rem}
+.analysis-text strong{font-weight:600}
+.analysis-text em{font-style:italic;color:var(--gray4)}
+.analysis-text .highlight-box{background:rgba(255,192,0,.1);border-left:3px solid var(--gold);padding:.75rem 1rem;border-radius:0 6px 6px 0;margin:1rem 0;font-size:.85rem}
+.analysis-text .risk-critical{color:var(--red);font-weight:600}
+.analysis-text .risk-high{color:var(--orange);font-weight:600}
+
+.streaming-cursor{display:inline-block;width:2px;height:1em;background:var(--navy);animation:blink .7s steps(1) infinite;vertical-align:text-bottom;margin-left:1px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Slide preview */
+.slides-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.slide-thumb{border:1px solid var(--gray2);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .15s}
+.slide-thumb:hover{border-color:var(--blueL);box-shadow:0 4px 16px rgba(46,95,163,.15);transform:translateY(-2px)}
+.slide-thumb .slide-preview{background:var(--navy);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;padding:1rem;position:relative;overflow:hidden}
+.slide-label{font-size:.72rem;color:var(--gray3);padding:.5rem .75rem;background:#fff;border-top:1px solid var(--gray2)}
+
+/* Proposte cards */
+.proposte-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.proposta-card{border:1px solid var(--gray2);border-radius:var(--radius-lg);overflow:hidden;transition:all .15s}
+.proposta-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.proposta-card.recommended{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,192,0,.2)}
+.pc-header{padding:1rem 1.25rem;color:#fff;position:relative}
+.pc-badge{position:absolute;top:.6rem;right:.75rem;background:var(--gold);color:var(--navy);font-size:.65rem;font-weight:700;padding:.2rem .5rem;border-radius:4px;letter-spacing:.04em}
+.pc-name{font-size:1rem;font-weight:600}
+.pc-sub{font-size:.75rem;opacity:.8;margin-top:2px}
+.pc-body{padding:1rem 1.25rem}
+.pc-feature{display:flex;align-items:flex-start;gap:7px;font-size:.8rem;margin-bottom:.45rem;color:var(--dark)}
+.pc-feature svg{width:14px;height:14px;flex-shrink:0;margin-top:2px}
+.pc-feature.disabled{color:var(--gray3)}
+.pc-price{padding:.9rem 1.25rem;border-top:1px solid var(--gray2);display:flex;align-items:center;justify-content:space-between}
+.pc-price-orig{font-size:.78rem;color:var(--gray3);text-decoration:line-through}
+.pc-price-disc{font-size:1.25rem;font-weight:700;color:var(--dark)}
+.pc-price-label{font-size:.7rem;color:var(--gray4)}
+.pc-price-badge{background:rgba(197,90,17,.1);color:var(--orange);font-size:.7rem;font-weight:600;padding:.2rem .5rem;border-radius:4px}
+
+/* Storico */
+.history-empty{text-align:center;padding:3rem;color:var(--gray3)}
+.history-empty svg{width:40px;height:40px;margin:0 auto .75rem;display:block}
+.history-list{display:flex;flex-direction:column;gap:8px}
+.history-item{background:#fff;border:1px solid var(--gray2);border-radius:10px;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;transition:all .15s}
+.history-item:hover{border-color:var(--blueL);box-shadow:var(--shadow)}
+.hi-info{flex:1;min-width:0}
+.hi-name{font-size:.9rem;font-weight:500;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hi-meta{font-size:.75rem;color:var(--gray4);margin-top:2px}
+.hi-actions{display:flex;gap:6px;flex-shrink:0}
+.icon-btn{width:32px;height:32px;border:1px solid var(--gray2);border-radius:7px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--gray4)}
+.icon-btn:hover{background:var(--gray1);border-color:var(--gray3)}
+.icon-btn svg{width:14px;height:14px}
+
+/* Toast */
+.toast-container{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;flex-direction:column;gap:8px;z-index:9999}
+.toast{background:#1e293b;color:#fff;padding:.7rem 1.1rem;border-radius:9px;font-size:.83rem;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-lg);animation:slideIn .2s ease}
+.toast.success{background:#375623}
+.toast.error{background:var(--red)}
+@keyframes slideIn{from{transform:translateX(20px);opacity:0}to{transform:none;opacity:1}}
+
+/* PDF upload indicator */
+.pdf-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(55,86,35,.1);color:var(--green);font-size:.75rem;font-weight:500;padding:.25rem .6rem;border-radius:5px;margin-top:6px}
+.pdf-badge svg{width:12px;height:12px}
+
+/* Slide mini previews */
+.slide-mini{width:100%;aspect-ratio:16/9;background:var(--navy);border-radius:6px;display:flex;flex-direction:column;padding:.5rem;overflow:hidden;position:relative}
+.sm-bar{height:3px;background:var(--orange);width:30%;border-radius:2px;margin-bottom:.3rem}
+.sm-title{font-size:.35rem;color:rgba(255,255,255,.9);font-weight:600;margin-bottom:.15rem;white-space:nowrap;overflow:hidden}
+.sm-lines{display:flex;flex-direction:column;gap:.15rem}
+.sm-line{height:1.5px;background:rgba(255,255,255,.25);border-radius:1px}
+.sm-accent{position:absolute;right:0;top:0;bottom:0;width:30%;background:rgba(46,95,163,.6)}
+
+/* Responsive */
+@media(max-width:700px){
+  .sidebar{display:none}
+  .form-grid,.form-grid.cols-3,.premi-grid,.proposte-grid{grid-template-columns:1fr}
+  .form-group.span2{grid-column:span 1}
+  .content{padding:1rem}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="brand">Tutela Legale<br>Generatore</div>
+      <div class="sub">Vittoria Assicurazioni</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Strumenti</div>
+      <button class="nav-item active" onclick="showView('formView',this)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+        Nuovo cliente
+      </button>
+      <button class="nav-item" onclick="showView('storicoView',this)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Storico analisi
+      </button>
+      <div class="nav-section" style="margin-top:.5rem">Guida</div>
+      <button class="nav-item" onclick="showHelp()">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 17v-5M12 8v.01"/></svg>
+        Come usare l'app
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="api-label">API Key Anthropic</div>
+      <input class="api-input" type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
+      <div style="font-size:.65rem;color:rgba(255,255,255,.3);margin-top:5px">Salvata solo in memoria locale</div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <div class="topbar-title" id="topbarTitle">Nuova analisi cliente</div>
+        <div class="topbar-sub" id="topbarSub">Compila il form o carica il bilancio PDF</div>
+      </div>
+      <div class="topbar-badge">Tutela in Azienda</div>
+    </header>
+
+    <div class="content">
+
+      <!-- FORM VIEW -->
+      <div class="view active" id="formView">
+        <div class="form-card">
+          <div class="form-header">
+            <div class="form-header-icon">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+            </div>
+            <div>
+              <div class="form-header-title">Dati cliente</div>
+              <div class="form-header-sub">Compila manualmente o carica il PDF del bilancio per compilazione automatica</div>
+            </div>
+          </div>
+
+          <div class="form-body">
+
+            <!-- Upload PDF -->
+            <div class="form-section-title">Importazione automatica da bilancio</div>
+            <div class="upload-zone" id="uploadZone">
+              <input type="file" accept=".pdf" id="pdfInput" onchange="handlePdfUpload(event)">
+              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414A1 1 0 0119 9.414V19a2 2 0 01-2 2z"/></svg>
+              <div class="uz-title" id="uzTitle">Trascina il PDF del bilancio oppure clicca per selezionare</div>
+              <div class="uz-sub" id="uzSub">Visura camerale con bilancio allegato — i dati vengono estratti automaticamente</div>
+            </div>
+            <div id="pdfBadge" style="display:none" class="pdf-badge">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+              <span id="pdfFileName"></span> — dati estratti
+            </div>
+
+            <div style="margin:1.75rem 0;display:flex;align-items:center;gap:.75rem">
+              <div style="flex:1;height:1px;background:var(--gray2)"></div>
+              <span style="font-size:.75rem;color:var(--gray3)">oppure inserisci manualmente</span>
+              <div style="flex:1;height:1px;background:var(--gray2)"></div>
+            </div>
+
+            <!-- Dati anagrafici -->
+            <div class="form-section-title">Anagrafica</div>
+            <div class="form-grid" style="margin-bottom:1.25rem">
+              <div class="form-group span2">
+                <label class="label">Ragione sociale <span class="req">*</span></label>
+                <input type="text" id="ragioneSociale" placeholder="es. S.M.A. Srl">
+              </div>
+              <div class="form-group">
+                <label class="label">Sede (Comune)</label>
+                <input type="text" id="sede" placeholder="es. Costa Volpino (BG)">
+              </div>
+              <div class="form-group">
+                <label class="label">Forma giuridica</label>
+                <select id="formaGiuridica">
+                  <option value="">Seleziona...</option>
+                  <option value="SRL">S.r.l.</option>
+                  <option value="SRL Unipersonale">S.r.l. Unipersonale</option>
+                  <option value="SPA">S.p.A.</option>
+                  <option value="SNC">S.n.c.</option>
+                  <option value="SAS">S.a.s.</option>
+                  <option value="Ditta individuale">Ditta individuale</option>
+                  <option value="Artigiana">Impresa artigiana</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="label">Nome titolare / amministratore</label>
+                <input type="text" id="titolare" placeholder="es. Fumagalli Adel">
+              </div>
+              <div class="form-group">
+                <label class="label">Codice ATECO</label>
+                <input type="text" id="ateco" placeholder="es. 25.12.10">
+              </div>
+            </div>
+
+            <!-- Dati economici -->
+            <div class="form-section-title">Dati economici (ultimo bilancio)</div>
+            <div class="form-grid cols-3" style="margin-bottom:1.25rem">
+              <div class="form-group">
+                <label class="label">Fatturato (€) <span class="req">*</span></label>
+                <input type="number" id="fatturato" placeholder="es. 787913">
+              </div>
+              <div class="form-group">
+                <label class="label">Patrimonio netto (€)</label>
+                <input type="number" id="patrimonioNetto" placeholder="es. 103641">
+              </div>
+              <div class="form-group">
+                <label class="label">Crediti vs clienti (€)</label>
+                <input type="number" id="creditiClienti" placeholder="es. 138005">
+              </div>
+              <div class="form-group">
+                <label class="label">Costo materie prime (€)</label>
+                <input type="number" id="costoMaterie" placeholder="es. 402822">
+              </div>
+              <div class="form-group">
+                <label class="label">Costo personale (€)</label>
+                <input type="number" id="costoPersonale" placeholder="es. 32534">
+              </div>
+              <div class="form-group">
+                <label class="label">Utile esercizio (€)</label>
+                <input type="number" id="utileEsercizio" placeholder="es. 20514">
+              </div>
+            </div>
+
+            <!-- Operatività -->
+            <div class="form-section-title">Operatività</div>
+            <div class="form-grid" style="margin-bottom:1.25rem">
+              <div class="form-group">
+                <label class="label">N° dipendenti <span class="req">*</span></label>
+                <input type="number" id="dipendenti" placeholder="es. 1" min="0">
+              </div>
+              <div class="form-group">
+                <label class="label">Attività svolta</label>
+                <input type="text" id="attivita" placeholder="es. Fabbricazione serramenti metallici">
+              </div>
+              <div class="form-group">
+                <label class="label">Clientela principale</label>
+                <select id="clientela">
+                  <option value="">Seleziona...</option>
+                  <option value="B2B (aziende)">B2B (aziende)</option>
+                  <option value="B2C (privati)">B2C (privati)</option>
+                  <option value="Misto B2B/B2C">Misto B2B/B2C</option>
+                  <option value="Pubblica amministrazione">Pubblica amministrazione</option>
+                  <option value="Grande distribuzione">Grande distribuzione</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="label">Lavori/forniture presso terzi</label>
+                <select id="lavoriTerzi">
+                  <option value="no">No</option>
+                  <option value="si occasionalmente">Sì, occasionalmente</option>
+                  <option value="si regolarmente">Sì, regolarmente</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Polizza esistente -->
+            <div class="form-section-title">Copertura assicurativa esistente</div>
+            <div class="form-group" style="margin-bottom:1rem">
+              <label class="label">Ha già una polizza RCT/RCO con Vittoria?</label>
+              <div class="toggle-group">
+                <button class="toggle-btn active-yes" id="rcSi" onclick="toggleRC(true)">Sì, già cliente Vittoria</button>
+                <button class="toggle-btn" id="rcNo" onclick="toggleRC(false)">No / altra compagnia</button>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:1.25rem" id="massimaleGroup">
+              <label class="label">Massimale RCT in corso (€)</label>
+              <input type="number" id="massimaleRC" placeholder="es. 1500000">
+              <span class="input-hint">Lascia vuoto se non noto</span>
+            </div>
+
+            <!-- Note aggiuntive -->
+            <div class="form-section-title">Note per l'analisi</div>
+            <div class="form-group">
+              <label class="label">Informazioni aggiuntive rilevanti</label>
+              <textarea id="noteAggiuntive" placeholder="es. L'azienda ha recentemente avviato nuove commesse con enti pubblici, ha subito una sanzione ASL nel 2023, opera anche come subappaltatore..."></textarea>
+            </div>
+
+            <!-- Premi preventivati -->
+            <div style="margin-top:1.75rem">
+              <div class="form-section-title">Premi preventivati (opzionale)</div>
+              <div style="font-size:.78rem;color:var(--gray4);margin-bottom:.75rem">Inserisci i premi dopo aver fatto il preventivo su Vittoria. Lascia vuoto per usare stime.</div>
+              <div class="premi-grid">
+                <div class="premio-card">
+                  <div class="pk-label"><span class="pk-dot" style="background:#2E5FA3"></span>Essenziale</div>
+                  <div style="display:flex;align-items:baseline"><span class="euro-prefix">€</span><input type="number" id="premioEss" placeholder="381"></div>
+                </div>
+                <div class="premio-card" style="border-color:var(--gold)">
+                  <div class="pk-label"><span class="pk-dot" style="background:#FFC000"></span>Completa ★</div>
+                  <div style="display:flex;align-items:baseline"><span class="euro-prefix">€</span><input type="number" id="premioComp" placeholder="541"></div>
+                </div>
+                <div class="premio-card">
+                  <div class="pk-label"><span class="pk-dot" style="background:#C55A11"></span>Premium</div>
+                  <div style="display:flex;align-items:baseline"><span class="euro-prefix">€</span><input type="number" id="premioPrem" placeholder="1021"></div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /form-body -->
+
+          <div class="form-actions">
+            <button class="btn btn-secondary" onclick="resetForm()">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0115.46-4.46M20 15a9 9 0 01-15.46 4.46"/></svg>
+              Reset
+            </button>
+            <button class="btn btn-primary" id="generateBtn" onclick="startGeneration()">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              Genera analisi
+            </button>
+          </div>
+        </div>
+      </div><!-- /formView -->
+
+      <!-- GENERATING VIEW -->
+      <div class="view" id="generatingView">
+        <div class="gen-card">
+          <div class="gen-header">
+            <div class="gen-spinner" id="genSpinner"></div>
+            <div>
+              <div class="gen-title" id="genTitle">Analisi in corso...</div>
+              <div class="gen-sub" id="genSubtitle">Claude sta elaborando il profilo aziendale</div>
+            </div>
+          </div>
+          <div class="gen-steps" id="genSteps">
+            <div class="gen-step waiting" id="step1">
+              <svg class="gs-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              Profilo aziendale e analisi dei rischi
+            </div>
+            <div class="gen-step waiting" id="step2">
+              <svg class="gs-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              Gap analysis coperture esistenti
+            </div>
+            <div class="gen-step waiting" id="step3">
+              <svg class="gs-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Costruzione 3 proposte personalizzate
+            </div>
+            <div class="gen-step waiting" id="step4">
+              <svg class="gs-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+              Tutela Legale — analisi e proposta autonoma
+            </div>
+            <div class="gen-step waiting" id="step5">
+              <svg class="gs-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+              Spunti trattativa per l'agente
+            </div>
+          </div>
+          <div class="gen-progress"><div class="gen-progress-bar" id="progressBar"></div></div>
+        </div>
+      </div><!-- /generatingView -->
+
+      <!-- OUTPUT VIEW -->
+      <div class="view" id="outputView">
+        <div class="output-header">
+          <div>
+            <div class="output-title" id="outputTitle">Analisi —</div>
+            <div class="output-meta" id="outputMeta"></div>
+          </div>
+          <div class="output-actions">
+            <button class="btn btn-secondary" onclick="showView('formView', document.querySelector('.nav-item'))">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><path d="M12 4v16m8-8H4"/></svg>
+              Nuovo
+            </button>
+            <button class="btn btn-orange" onclick="copyAnalysis()">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              Copia testo
+            </button>
+          </div>
+        </div>
+
+        <div class="output-tabs">
+          <button class="otab active" onclick="switchTab('analisi',this)">📋 Analisi consulenziale</button>
+          <button class="otab" onclick="switchTab('proposte',this)">💼 3 Proposte</button>
+          <button class="otab" onclick="switchTab('slides',this)">🎯 Slide preview</button>
+        </div>
+
+        <div class="output-content">
+          <div class="tab-panel active" id="tab-analisi">
+            <div class="analysis-text" id="analysisOutput"></div>
+          </div>
+          <div class="tab-panel" id="tab-proposte">
+            <div class="proposte-grid" id="proposteOutput"></div>
+          </div>
+          <div class="tab-panel" id="tab-slides">
+            <div style="font-size:.83rem;color:var(--gray4);margin-bottom:1rem">Anteprima struttura slide — usa la presentazione .pptx generata per la versione completa</div>
+            <div class="slides-grid" id="slidesOutput"></div>
+          </div>
+        </div>
+      </div><!-- /outputView -->
+
+      <!-- STORICO VIEW -->
+      <div class="view" id="storicoView">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
+          <div>
+            <div style="font-size:1.1rem;font-weight:600;color:var(--dark)">Storico analisi</div>
+            <div style="font-size:.8rem;color:var(--gray4);margin-top:2px">Le ultime analisi generate in questa sessione</div>
+          </div>
+          <button class="btn btn-secondary" onclick="clearHistory()" style="font-size:.78rem">Svuota storico</button>
+        </div>
+        <div id="storicoContent"></div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ── State ──────────────────────────────────────────────────
+let currentAnalysis = '';
+let currentClientName = '';
+let analysisHistory = JSON.parse(localStorage.getItem('tl_history') || '[]');
+let rcEsistente = true;
+
+// ── Nav ────────────────────────────────────────────────────
+function showView(id, navEl) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (navEl) navEl.classList.add('active');
+  const titles = {
+    formView: ['Nuova analisi cliente','Compila il form o carica il bilancio PDF'],
+    generatingView: ['Generazione in corso...','Claude sta elaborando l\'analisi'],
+    outputView: ['Analisi generata','Pronta per l\'appuntamento'],
+    storicoView: ['Storico analisi','Ultime analisi generate']
+  };
+  const t = titles[id] || ['',''];
+  document.getElementById('topbarTitle').textContent = t[0];
+  document.getElementById('topbarSub').textContent = t[1];
+  if (id === 'storicoView') renderHistory();
+}
+
+function toggleRC(val) {
+  rcEsistente = val;
+  document.getElementById('rcSi').className = 'toggle-btn' + (val ? ' active-yes' : '');
+  document.getElementById('rcNo').className = 'toggle-btn' + (!val ? ' active-no' : '');
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.otab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── PDF Upload ─────────────────────────────────────────────
+async function handlePdfUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const zone = document.getElementById('uploadZone');
+  const uzTitle = document.getElementById('uzTitle');
+  const uzSub = document.getElementById('uzSub');
+
+  uzTitle.textContent = 'Elaborazione PDF in corso...';
+  uzSub.textContent = 'Claude sta estraendo i dati dal bilancio';
+  zone.classList.add('has-file');
+
+  try {
+    const base64 = await fileToBase64(file);
+    const apiKey = document.getElementById('apiKey').value.trim();
+    if (!apiKey) { showToast('Inserisci la chiave API nella sidebar', 'error'); return; }
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
+            { type: 'text', text: `Estrai dal bilancio PDF i seguenti dati e restituisci SOLO un JSON valido, nessun altro testo:
+{
+  "ragioneSociale": "",
+  "sede": "",
+  "formaGiuridica": "",
+  "titolare": "",
+  "ateco": "",
+  "attivita": "",
+  "fatturato": 0,
+  "patrimonioNetto": 0,
+  "creditiClienti": 0,
+  "costoMaterie": 0,
+  "costoPersonale": 0,
+  "utileEsercizio": 0,
+  "dipendenti": 0
+}
+Se un dato non è presente lascia il valore vuoto o 0. Solo JSON, nessun testo aggiuntivo.` }
+          ]
+        }]
+      })
+    });
+
+    const data = await resp.json();
+    const text = data.content?.[0]?.text || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+    const obj = JSON.parse(clean);
+
+    // Popola form
+    const map = {
+      ragioneSociale: 'ragioneSociale', sede: 'sede', formaGiuridica: null,
+      titolare: 'titolare', ateco: 'ateco', attivita: 'attivita',
+      fatturato: 'fatturato', patrimonioNetto: 'patrimonioNetto',
+      creditiClienti: 'creditiClienti', costoMaterie: 'costoMaterie',
+      costoPersonale: 'costoPersonale', utileEsercizio: 'utileEsercizio',
+      dipendenti: 'dipendenti'
+    };
+    Object.entries(map).forEach(([k, id]) => {
+      if (!id) return;
+      const el = document.getElementById(id);
+      if (el && obj[k]) el.value = obj[k];
+    });
+    if (obj.formaGiuridica) {
+      const sel = document.getElementById('formaGiuridica');
+      for (let o of sel.options) if (o.value.toLowerCase().includes(obj.formaGiuridica.toLowerCase())) { sel.value = o.value; break; }
+    }
+
+    document.getElementById('pdfBadge').style.display = 'inline-flex';
+    document.getElementById('pdfFileName').textContent = file.name;
+    uzTitle.textContent = 'PDF elaborato — dati compilati automaticamente';
+    uzSub.textContent = 'Verifica i campi e integra se necessario';
+    showToast('Dati estratti con successo', 'success');
+
+  } catch(err) {
+    uzTitle.textContent = 'Errore estrazione — compila manualmente';
+    uzSub.textContent = err.message;
+    zone.classList.remove('has-file');
+    showToast('Errore nell\'elaborazione del PDF', 'error');
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = () => rej(new Error('Lettura file fallita'));
+    r.readAsDataURL(file);
+  });
+}
+
+// ── Generation ─────────────────────────────────────────────
+function collectFormData() {
+  return {
+    ragioneSociale: document.getElementById('ragioneSociale').value.trim(),
+    sede: document.getElementById('sede').value.trim(),
+    formaGiuridica: document.getElementById('formaGiuridica').value,
+    titolare: document.getElementById('titolare').value.trim(),
+    ateco: document.getElementById('ateco').value.trim(),
+    attivita: document.getElementById('attivita').value.trim(),
+    fatturato: document.getElementById('fatturato').value,
+    patrimonioNetto: document.getElementById('patrimonioNetto').value,
+    creditiClienti: document.getElementById('creditiClienti').value,
+    costoMaterie: document.getElementById('costoMaterie').value,
+    costoPersonale: document.getElementById('costoPersonale').value,
+    utileEsercizio: document.getElementById('utileEsercizio').value,
+    dipendenti: document.getElementById('dipendenti').value,
+    clientela: document.getElementById('clientela').value,
+    lavoriTerzi: document.getElementById('lavoriTerzi').value,
+    rcEsistente: rcEsistente,
+    massimaleRC: document.getElementById('massimaleRC').value,
+    noteAggiuntive: document.getElementById('noteAggiuntive').value.trim(),
+    premioEss: document.getElementById('premioEss').value || '(da preventivare)',
+    premioComp: document.getElementById('premioComp').value || '(da preventivare)',
+    premioPrem: document.getElementById('premioPrem').value || '(da preventivare)',
+  };
+}
+
+function buildPrompt(d) {
+  const fmt = v => v ? `€ ${Number(v).toLocaleString('it-IT')}` : 'n.d.';
+  return `Sei un consulente assicurativo senior specializzato in Tutela Legale per PMI italiane.
+
+DATI CLIENTE:
+- Ragione sociale: ${d.ragioneSociale || 'n.d.'}
+- Sede: ${d.sede || 'n.d.'}
+- Forma giuridica: ${d.formaGiuridica || 'n.d.'}
+- Titolare/Amministratore: ${d.titolare || 'n.d.'}
+- ATECO: ${d.ateco || 'n.d.'} — ${d.attivita || 'n.d.'}
+- Fatturato: ${fmt(d.fatturato)}
+- Patrimonio netto: ${fmt(d.patrimonioNetto)}
+- Crediti vs clienti: ${fmt(d.creditiClienti)}
+- Costo materie prime: ${fmt(d.costoMaterie)}
+- Costo personale: ${fmt(d.costoPersonale)}
+- Utile esercizio: ${fmt(d.utileEsercizio)}
+- Dipendenti: ${d.dipendenti || 'n.d.'}
+- Clientela: ${d.clientela || 'n.d.'}
+- Lavori presso terzi: ${d.lavoriTerzi}
+- Polizza RC Vittoria esistente: ${d.rcEsistente ? 'Sì' : 'No'}
+${d.massimaleRC ? `- Massimale RC: ${fmt(d.massimaleRC)}` : ''}
+${d.noteAggiuntive ? `- Note aggiuntive: ${d.noteAggiuntive}` : ''}
+
+PREMI PREVENTIVATI (Vittoria Tutela in Azienda):
+- Opzione Essenziale: ${d.premioEss}
+- Opzione Completa (consigliata): ${d.premioComp}
+- Opzione Premium: ${d.premioPrem}
+
+Produci un'analisi consulenziale completa seguendo esattamente questo schema con questi titoli (usa # per H1, ## per H2, ### per H3):
+
+# 1. Profilo aziendale
+Sintetizza settore, dimensione, attività, rischi principali.
+
+# 2. Analisi coperture esistenti
+${d.rcEsistente ? 'Valuta la polizza RC esistente e cosa NON copre.' : 'Evidenzia l\'assenza di tutela legale e i rischi conseguenti.'}
+
+# 3. Gap analysis
+Identifica le lacune assicurative principali (massimo 5, numerate e argomentate).
+
+# 4. Proposte RCT/RCO — Tutela Legale in Azienda
+Per ciascuna delle 3 opzioni (Essenziale / Completa / Premium) descrivi brevemente le garanzie incluse e il perché è adatta a questa azienda. Includi i premi indicati.
+
+# 5. Tutela Legale — analisi autonoma
+Scenari di contenzioso specifici per questo settore, costi legali concreti senza copertura, proposta con massimali consigliati.
+
+# 6. Spunti per l'agente
+4 frasi chiave calibrate su questo cliente specifico, una dedicata alla Tutela Legale.
+
+Stile: professionale ma diretto, concreto, orientato al valore per l'imprenditore. Usa dati numerici specifici.`;
+}
+
+async function startGeneration() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) { showToast('Inserisci la chiave API nella sidebar', 'error'); return; }
+
+  const d = collectFormData();
+  if (!d.ragioneSociale) { showToast('Inserisci almeno la ragione sociale', 'error'); return; }
+  if (!d.fatturato && !d.dipendenti) { showToast('Inserisci almeno fatturato o dipendenti', 'error'); return; }
+
+  currentClientName = d.ragioneSociale;
+  showView('generatingView', null);
+
+  const steps = ['step1','step2','step3','step4','step5'];
+  const durations = [1200, 1000, 1200, 1000, 800];
+  let progress = 0;
+
+  // Animate steps
+  const animateSteps = async () => {
+    for (let i = 0; i < steps.length; i++) {
+      if (i > 0) document.getElementById(steps[i-1]).className = 'gen-step done';
+      document.getElementById(steps[i]).className = 'gen-step active';
+      progress = Math.round(((i+1)/steps.length)*85);
+      document.getElementById('progressBar').style.width = progress + '%';
+      await sleep(durations[i]);
+    }
+  };
+  animateSteps();
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-beta': 'interleaved-thinking-2025-05-14' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4000,
+        thinking: { type: 'disabled' },
+        messages: [{ role: 'user', content: buildPrompt(d) }]
+      })
+    });
+
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error.message);
+
+    const text = data.content?.find(b => b.type === 'text')?.text || '';
+    currentAnalysis = text;
+
+    // Complete progress
+    steps.forEach(s => document.getElementById(s).className = 'gen-step done');
+    document.getElementById('progressBar').style.width = '100%';
+    document.getElementById('genSpinner').style.borderTopColor = 'var(--greenL)';
+
+    await sleep(500);
+
+    // Save to history
+    const record = {
+      id: Date.now(),
+      name: d.ragioneSociale,
+      sede: d.sede,
+      date: new Date().toLocaleDateString('it-IT'),
+      fatturato: d.fatturato,
+      analysis: text,
+      premi: { ess: d.premioEss, comp: d.premioComp, prem: d.premioPrem }
+    };
+    analysisHistory.unshift(record);
+    if (analysisHistory.length > 20) analysisHistory.pop();
+    localStorage.setItem('tl_history', JSON.stringify(analysisHistory));
+
+    renderOutput(d, text);
+    showView('outputView', null);
+    showToast('Analisi generata con successo', 'success');
+
+  } catch(err) {
+    showToast('Errore: ' + err.message, 'error');
+    showView('formView', document.querySelector('.nav-item'));
+  }
+}
+
+function renderOutput(d, text) {
+  // Header
+  document.getElementById('outputTitle').textContent = 'Analisi — ' + d.ragioneSociale;
+  document.getElementById('outputMeta').textContent =
+    (d.sede ? d.sede + ' · ' : '') +
+    (d.ateco ? 'ATECO ' + d.ateco + ' · ' : '') +
+    'Generata il ' + new Date().toLocaleDateString('it-IT', {day:'2-digit',month:'long',year:'numeric'});
+
+  // Analysis text
+  document.getElementById('analysisOutput').innerHTML = markdownToHtml(text);
+
+  // Proposte cards
+  const pEss = d.premioEss !== '(da preventivare)' ? d.premioEss : '381';
+  const pComp = d.premioComp !== '(da preventivare)' ? d.premioComp : '541';
+  const pPrem = d.premioPrem !== '(da preventivare)' ? d.premioPrem : '1.021';
+  const disc = p => Math.round(Number(p.replace('.','')) * 0.9).toLocaleString('it-IT');
+
+  document.getElementById('proposteOutput').innerHTML = [
+    { name:'Essenziale', col:'#2E5FA3', rec:false, p:pEss,
+      features:['Difesa penale colposa','Opposizione sanzioni amm.ve','Sicurezza, Privacy & Cyber','Tutela danni extracontrattuali','Contrattuale Light (fornitori+clienti)'],
+      miss:['Contrattuale Completo','Fisco e Previdenza'] },
+    { name:'Completa ★', col:'#1F3864', rec:true, p:pComp,
+      features:['Tutto di Essenziale','Retroattività proc. penali','Contrattuale Completo (lav.+appalti)','Controversie Clienti 5 casi','Pacchetto Fisco e Previdenza'],
+      miss:['Controversie Clienti 10 casi'] },
+    { name:'Premium', col:'#C55A11', rec:false, p:pPrem,
+      features:['Tutto di Completa','Controversie Clienti 10 casi','Massimali potenziati'],
+      miss:[] },
+  ].map(opt => `
+    <div class="proposta-card ${opt.rec ? 'recommended' : ''}">
+      <div class="pc-header" style="background:${opt.col}">
+        ${opt.rec ? '<div class="pc-badge">CONSIGLIATA</div>' : ''}
+        <div class="pc-name">${opt.name}</div>
+        <div class="pc-sub">Vittoria Tutela in Azienda</div>
+      </div>
+      <div class="pc-body">
+        ${opt.features.map(f => `<div class="pc-feature"><svg fill="none" stroke="${opt.rec ? '#FFC000':'#375623'}" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>${f}</div>`).join('')}
+        ${opt.miss.map(f => `<div class="pc-feature disabled"><svg fill="none" stroke="#94A3B8" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>${f}</div>`).join('')}
+      </div>
+      <div class="pc-price">
+        <div>
+          <div class="pc-price-orig">€ ${Number(opt.p.replace('.','') || 0).toLocaleString('it-IT')} /anno</div>
+          <div class="pc-price-disc">€ ${disc(opt.p)} /anno</div>
+          <div class="pc-price-label">con sconto 10%</div>
+        </div>
+        <div class="pc-price-badge">-10%</div>
+      </div>
+    </div>`).join('');
+
+  // Slides preview
+  const slidesList = [
+    {label:'Slide 1 — Copertina', col:'#1F3864'},
+    {label:'Slide 2 — Situazione attuale', col:'#2E5FA3'},
+    {label:'Slide 3 — Rischi concreti', col:'#C00000'},
+    {label:'Slide 4 — Le garanzie', col:'#1F3864'},
+    {label:'Slide 5 — Estensioni chiave', col:'#C55A11'},
+    {label:'Slide 6 — Tavola comparativa', col:'#375623'},
+    {label:'Slide 7 — Call to action', col:'#C55A11'},
+  ];
+  document.getElementById('slidesOutput').innerHTML = slidesList.map(sl => `
+    <div class="slide-thumb">
+      <div class="slide-preview" style="background:${sl.col}">
+        <div style="width:100%">
+          <div style="height:3px;background:rgba(255,165,0,.8);width:35%;border-radius:2px;margin-bottom:.5rem"></div>
+          <div style="font-size:.45rem;color:rgba(255,255,255,.9);font-weight:600;margin-bottom:.5rem;white-space:nowrap;overflow:hidden">${d.ragioneSociale}</div>
+          <div style="display:flex;flex-direction:column;gap:.2rem">
+            <div style="height:2px;background:rgba(255,255,255,.3);border-radius:1px;width:80%"></div>
+            <div style="height:2px;background:rgba(255,255,255,.2);border-radius:1px;width:60%"></div>
+            <div style="height:2px;background:rgba(255,255,255,.2);border-radius:1px;width:70%"></div>
+          </div>
+        </div>
+        <div style="position:absolute;right:0;top:0;bottom:0;width:28%;background:rgba(255,255,255,.08)"></div>
+      </div>
+      <div class="slide-label">${sl.label}</div>
+    </div>`).join('');
+}
+
+// ── Markdown → HTML ────────────────────────────────────────
+function markdownToHtml(md) {
+  return md
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^[-•] (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, s => '<ul>' + s + '</ul>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^(?!<[hup])(.+)$/gm, '<p>$1</p>')
+    .replace(/<p><\/p>/g, '')
+    .replace(/€ (\d[\d.,]*)/g, '€ <strong>$1</strong>');
+}
+
+// ── History ────────────────────────────────────────────────
+function renderHistory() {
+  const el = document.getElementById('storicoContent');
+  if (!analysisHistory.length) {
+    el.innerHTML = `<div class="history-empty">
+      <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Nessuna analisi ancora generata in questa sessione
+    </div>`;
+    return;
+  }
+  el.innerHTML = `<div class="history-list">` +
+    analysisHistory.map(r => `
+      <div class="history-item">
+        <div class="hi-info">
+          <div class="hi-name">${r.name}</div>
+          <div class="hi-meta">${r.sede || ''} · ${r.date} ${r.fatturato ? '· Fat. € ' + Number(r.fatturato).toLocaleString('it-IT') : ''}</div>
+        </div>
+        <div class="hi-actions">
+          <button class="icon-btn" onclick="loadHistory(${r.id})" title="Riapri analisi">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          </button>
+          <button class="icon-btn" onclick="copyHistoryItem(${r.id})" title="Copia testo">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          </button>
+          <button class="icon-btn" onclick="deleteHistory(${r.id})" title="Elimina" style="color:var(--red)">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </button>
+        </div>
+      </div>`).join('') + '</div>';
+}
+
+function loadHistory(id) {
+  const r = analysisHistory.find(x => x.id === id);
+  if (!r) return;
+  currentAnalysis = r.analysis;
+  currentClientName = r.name;
+  document.getElementById('analysisOutput').innerHTML = markdownToHtml(r.analysis);
+  document.getElementById('outputTitle').textContent = 'Analisi — ' + r.name;
+  document.getElementById('outputMeta').textContent = r.date;
+  renderOutput({ ragioneSociale: r.name, sede: r.sede, ateco: '', fatturato: r.fatturato,
+    premioEss: r.premi.ess, premioComp: r.premi.comp, premioPrem: r.premi.prem }, r.analysis);
+  showView('outputView', null);
+}
+
+function copyHistoryItem(id) {
+  const r = analysisHistory.find(x => x.id === id);
+  if (r) { navigator.clipboard.writeText(r.analysis); showToast('Analisi copiata'); }
+}
+
+function deleteHistory(id) {
+  analysisHistory = analysisHistory.filter(x => x.id !== id);
+  localStorage.setItem('tl_history', JSON.stringify(analysisHistory));
+  renderHistory();
+}
+
+function clearHistory() {
+  if (!confirm('Svuotare lo storico?')) return;
+  analysisHistory = [];
+  localStorage.setItem('tl_history', '[]');
+  renderHistory();
+}
+
+// ── Actions ────────────────────────────────────────────────
+function copyAnalysis() {
+  navigator.clipboard.writeText(currentAnalysis);
+  showToast('Analisi copiata negli appunti', 'success');
+}
+
+function resetForm() {
+  document.querySelectorAll('input[type=text],input[type=number],textarea').forEach(el => el.value = '');
+  document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  document.getElementById('pdfBadge').style.display = 'none';
+  document.getElementById('uploadZone').classList.remove('has-file');
+  document.getElementById('uzTitle').textContent = 'Trascina il PDF del bilancio oppure clicca per selezionare';
+  document.getElementById('uzSub').textContent = 'Visura camerale con bilancio allegato — i dati vengono estratti automaticamente';
+  toggleRC(true);
+}
+
+function showHelp() {
+  showToast('1. Inserisci la chiave API · 2. Compila il form · 3. Genera analisi · 4. Copia o riusa');
+}
+
+// ── Toast ──────────────────────────────────────────────────
+function showToast(msg, type = '') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ── Drag & drop on upload zone ─────────────────────────────
+const uz = document.getElementById('uploadZone');
+uz.addEventListener('dragover', e => { e.preventDefault(); uz.classList.add('drag'); });
+uz.addEventListener('dragleave', () => uz.classList.remove('drag'));
+uz.addEventListener('drop', e => {
+  e.preventDefault(); uz.classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if (f && f.type === 'application/pdf') {
+    document.getElementById('pdfInput').files = e.dataTransfer.files;
+    handlePdfUpload({ target: { files: e.dataTransfer.files } });
+  }
+});
+
+// ── Persist API key ────────────────────────────────────────
+const savedKey = localStorage.getItem('tl_apikey');
+if (savedKey) document.getElementById('apiKey').value = savedKey;
+document.getElementById('apiKey').addEventListener('change', e => {
+  localStorage.setItem('tl_apikey', e.target.value);
+});
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+</script>
+</body>
+</html>
