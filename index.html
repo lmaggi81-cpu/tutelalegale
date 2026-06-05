@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generatore Analisi — Vittoria Assicurazioni</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1F3864;--blue:#2E5FA3;--blueL:#4472C4;--orange:#C55A11;--red:#C00000;
+  --green:#375623;--greenL:#70AD47;--gold:#FFC000;--teal:#0D7377;
+  --offwhite:#F7F9FC;--gray1:#F2F2F2;--gray2:#E2E8F0;--gray3:#94A3B8;--gray4:#64748B;--dark:#1E293B;
+  --sidebar:268px;--font-d:'DM Serif Display',Georgia,serif;--font-b:'DM Sans',system-ui,sans-serif;
+  --r:10px;--rl:16px;--sh:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.06);
+}
+body{font-family:var(--font-b);background:var(--offwhite);color:var(--dark);min-height:100vh}
+.app{display:flex;min-height:100vh}
+.sidebar{width:var(--sidebar);background:var(--navy);flex-shrink:0;display:flex;flex-direction:column}
+.sb-logo{padding:1.4rem 1.2rem .9rem;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-logo .brand{font-family:var(--font-d);font-size:1.05rem;color:#fff;line-height:1.25}
+.sb-logo .sub{font-size:.68rem;color:rgba(255,255,255,.45);letter-spacing:.07em;text-transform:uppercase;margin-top:3px}
+.sb-nav{flex:1;padding:1.1rem .7rem;display:flex;flex-direction:column;gap:3px;overflow-y:auto}
+.ns{font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.32);padding:.85rem .85rem .28rem;font-weight:600}
+.ni{display:flex;align-items:center;gap:9px;padding:.55rem .85rem;border-radius:8px;cursor:pointer;font-size:.83rem;color:rgba(255,255,255,.6);border:none;background:none;width:100%;text-align:left;transition:background .14s}
+.ni:hover{background:rgba(255,255,255,.07);color:#fff}
+.ni.active{background:rgba(255,255,255,.13);color:#fff;font-weight:500}
+.ni svg{width:15px;height:15px;flex-shrink:0;opacity:.85}
+.prod-pills{padding:.8rem .7rem .4rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.prod-pills-label{font-size:.63rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.32);font-weight:600;margin-bottom:.5rem;padding-left:.15rem}
+.pp{display:flex;align-items:center;gap:8px;padding:.45rem .85rem;border-radius:7px;cursor:pointer;font-size:.8rem;color:rgba(255,255,255,.55);border:1px solid transparent;background:none;width:100%;text-align:left;transition:background .14s}
+.pp:hover{background:rgba(255,255,255,.06)}
+.pp.sel{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.15)}
+.pp .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sb-foot{padding:.9rem 1.2rem;border-top:1px solid rgba(255,255,255,.1)}
+.sb-foot .al{font-size:.67rem;color:rgba(255,255,255,.38);margin-bottom:4px;letter-spacing:.05em;text-transform:uppercase}
+.api-in{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:.42rem .68rem;color:#fff;font-size:.74rem;font-family:var(--font-b);outline:none}
+.api-in::placeholder{color:rgba(255,255,255,.28)}
+.api-in:focus{border-color:rgba(255,255,255,.32)}
+.api-hint{font-size:.63rem;color:rgba(255,255,255,.28);margin-top:4px}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:#fff;border-bottom:1px solid var(--gray2);padding:.8rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.tb-title{font-size:.95rem;font-weight:600;color:var(--dark)}
+.tb-sub{font-size:.76rem;color:var(--gray4);margin-top:1px}
+.tb-badge{font-size:.7rem;font-weight:600;padding:.22rem .62rem;border-radius:20px;letter-spacing:.03em}
+.content{flex:1;overflow-y:auto;padding:2rem}
+.view{display:none}.view.active{display:block}
+.fc{background:#fff;border-radius:var(--rl);border:1px solid var(--gray2);box-shadow:var(--sh);overflow:hidden;max-width:840px}
+.fh{padding:1.4rem 2rem;border-bottom:1px solid var(--gray2);display:flex;align-items:center;gap:13px}
+.fhi{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fhi svg{width:19px;height:19px}
+.fh-title{font-size:.95rem;font-weight:600;color:var(--dark)}
+.fh-sub{font-size:.76rem;color:var(--gray4)}
+.fb{padding:1.6rem 2rem}
+.fs-title{font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gray4);padding-bottom:.55rem;border-bottom:1px solid var(--gray2);margin-bottom:1.15rem}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-bottom:1.1rem}
+.fg.c3{grid-template-columns:1fr 1fr 1fr}
+.fg.c1{grid-template-columns:1fr}
+.fgr{display:flex;flex-direction:column;gap:4px}
+.fgr.s2{grid-column:span 2}
+.lbl{font-size:.76rem;font-weight:500;color:var(--gray4)}
+.lbl .r{color:var(--orange)}
+input[type=text],input[type=number],select,textarea{width:100%;padding:.58rem .8rem;border:1px solid var(--gray2);border-radius:8px;font-family:var(--font-b);font-size:.86rem;color:var(--dark);background:#fff;outline:none;transition:border .14s,box-shadow .14s}
+input:focus,select:focus,textarea:focus{border-color:var(--blueL);box-shadow:0 0 0 3px rgba(68,114,196,.11)}
+textarea{resize:vertical;min-height:76px;line-height:1.5}
+.hint{font-size:.7rem;color:var(--gray3);margin-top:2px}
+.uz{border:1.5px dashed var(--gray2);border-radius:var(--r);padding:1.4rem;text-align:center;cursor:pointer;transition:all .14s;background:var(--offwhite);position:relative}
+.uz:hover,.uz.drag{border-color:var(--blueL);background:rgba(68,114,196,.04)}
+.uz input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.uz svg{width:26px;height:26px;color:var(--gray3);margin:0 auto .45rem}
+.uz .ut{font-size:.83rem;font-weight:500;color:var(--gray4)}
+.uz .us{font-size:.73rem;color:var(--gray3);margin-top:3px}
+.uz.hf{border-style:solid;border-color:var(--greenL);background:rgba(112,173,71,.05)}
+.uz.hf .ut{color:var(--green)}
+.pdf-b{display:inline-flex;align-items:center;gap:5px;background:rgba(55,86,35,.1);color:var(--green);font-size:.73rem;font-weight:500;padding:.22rem .58rem;border-radius:5px;margin-top:5px}
+.tg{display:flex;gap:7px}
+.tb{flex:1;padding:.48rem;border:1px solid var(--gray2);border-radius:8px;font-size:.81rem;font-weight:500;cursor:pointer;background:#fff;color:var(--gray4);transition:all .14s;text-align:center}
+.tb.ay{border-color:var(--greenL);background:rgba(112,173,71,.08);color:var(--green)}
+.tb.an{border-color:var(--orange);background:rgba(197,90,17,.06);color:var(--orange)}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}
+.pc{border:1px solid var(--gray2);border-radius:var(--r);padding:.85rem 1rem}
+.pc .pkl{font-size:.7rem;font-weight:600;color:var(--gray4);margin-bottom:.38rem;display:flex;align-items:center;gap:6px}
+.pc .pkl .pd{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.pc input{border:none;border-bottom:1px solid var(--gray2);border-radius:0;padding:.28rem 0;font-size:1rem;font-weight:500;background:transparent}
+.pc input:focus{box-shadow:none;border-color:var(--blueL)}
+.ep{font-size:.83rem;color:var(--gray3);margin-right:3px}
+.fa{padding:1.15rem 2rem;border-top:1px solid var(--gray2);display:flex;align-items:center;justify-content:space-between;background:var(--offwhite)}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:.62rem 1.35rem;border-radius:8px;font-family:var(--font-b);font-size:.86rem;font-weight:500;cursor:pointer;border:none;transition:all .14s}
+.btn svg{width:15px;height:15px;flex-shrink:0}
+.btn-p{background:var(--navy);color:#fff}.btn-p:hover{background:#16284d;transform:translateY(-1px);box-shadow:0 4px 12px rgba(31,56,100,.28)}
+.btn-p:disabled{background:var(--gray3);cursor:not-allowed;transform:none;box-shadow:none}
+.btn-s{background:#fff;color:var(--gray4);border:1px solid var(--gray2)}.btn-s:hover{background:var(--gray1)}
+.btn-o{background:var(--orange);color:#fff}.btn-o:hover{background:#a84a0d}
+.gc{background:#fff;border:1px solid var(--gray2);border-radius:var(--rl);box-shadow:var(--sh);padding:2rem;max-width:640px}
+.g-hd{display:flex;align-items:center;gap:13px;margin-bottom:1.6rem}
+.g-sp{width:34px;height:34px;border:3px solid var(--gray2);border-top-color:var(--navy);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.g-title{font-size:.95rem;font-weight:600}
+.g-sub{font-size:.78rem;color:var(--gray4)}
+.g-steps{display:flex;flex-direction:column;gap:9px;margin-bottom:1.6rem}
+.gs{display:flex;align-items:center;gap:9px;padding:.6rem .95rem;border-radius:8px;font-size:.83rem;transition:all .28s}
+.gs.w{background:var(--gray1);color:var(--gray3)}
+.gs.a{background:rgba(31,56,100,.07);color:var(--navy);font-weight:500}
+.gs.d{background:rgba(112,173,71,.08);color:var(--green)}
+.gs svg{width:18px;height:18px;flex-shrink:0}
+.g-pb{height:4px;background:var(--gray2);border-radius:4px;overflow:hidden}
+.g-pbb{height:100%;background:linear-gradient(90deg,var(--navy),var(--blueL));border-radius:4px;transition:width .4s ease;width:0}
+.o-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.4rem;gap:1rem}
+.o-title{font-family:var(--font-d);font-size:1.5rem;color:var(--navy)}
+.o-meta{font-size:.78rem;color:var(--gray4);margin-top:3px}
+.o-acts{display:flex;gap:7px;flex-shrink:0}
+.o-tabs{display:flex;gap:0;border:1px solid var(--gray2);border-radius:9px;overflow:hidden;margin-bottom:1.15rem;background:var(--gray1)}
+.ot{padding:.55rem 1.15rem;font-size:.81rem;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--gray4);transition:all .14s}
+.ot.active{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(0,0,0,.09)}
+.o-content{background:#fff;border:1px solid var(--gray2);border-radius:var(--rl);box-shadow:var(--sh);padding:2rem;min-height:380px}
+.tp{display:none}.tp.active{display:block}
+.at{font-size:.88rem;line-height:1.78;color:var(--dark)}
+.at h1{font-family:var(--font-d);font-size:1.35rem;color:var(--navy);margin:1.4rem 0 .7rem;padding-bottom:.45rem;border-bottom:2px solid var(--gray2)}
+.at h1:first-child{margin-top:0}
+.at h2{font-size:.95rem;font-weight:600;color:var(--blue);margin:1.15rem 0 .45rem}
+.at h3{font-size:.88rem;font-weight:600;color:var(--orange);margin:.9rem 0 .35rem}
+.at p{margin-bottom:.7rem}
+.at ul{margin:.45rem 0 .7rem 1.15rem}
+.at ul li{margin-bottom:.28rem}
+.at strong{font-weight:600}
+.pg3{display:grid;grid-template-columns:repeat(3,1fr);gap:.95rem}
+.pcard{border:1px solid var(--gray2);border-radius:var(--rl);overflow:hidden;transition:all .14s}
+.pcard:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.pcard.rec{border-width:2px}
+.ph{padding:.95rem 1.15rem;color:#fff;position:relative}
+.p-badge{position:absolute;top:.55rem;right:.7rem;background:var(--gold);color:var(--navy);font-size:.62rem;font-weight:700;padding:.18rem .45rem;border-radius:4px;letter-spacing:.04em}
+.p-name{font-size:.95rem;font-weight:600}
+.p-sub{font-size:.72rem;opacity:.8;margin-top:2px}
+.pb{padding:.95rem 1.15rem}
+.pf{display:flex;align-items:flex-start;gap:6px;font-size:.78rem;margin-bottom:.4rem}
+.pf svg{width:13px;height:13px;flex-shrink:0;margin-top:2px}
+.pf.off{color:var(--gray3)}
+.pleva{margin-top:.7rem;padding:.6rem .75rem;background:rgba(255,192,0,.08);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;font-size:.78rem;color:var(--gray4);font-style:italic}
+.pp2{padding:.85rem 1.15rem;border-top:1px solid var(--gray2);display:flex;align-items:center;justify-content:space-between}
+.po{font-size:.76rem;color:var(--gray3);text-decoration:line-through}
+.pd2{font-size:1.2rem;font-weight:700}
+.pl{font-size:.68rem;color:var(--gray4)}
+.pbadge2{background:rgba(197,90,17,.1);color:var(--orange);font-size:.68rem;font-weight:600;padding:.18rem .45rem;border-radius:4px}
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.95rem}
+.sth{border:1px solid var(--gray2);border-radius:9px;overflow:hidden}
+.sth .sp{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;padding:.9rem;position:relative;overflow:hidden}
+.sl{font-size:.7rem;color:var(--gray3);padding:.45rem .7rem;background:#fff;border-top:1px solid var(--gray2)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem}
+.modal{background:#fff;border-radius:var(--rl);max-width:560px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden}
+.modal-h{padding:1.4rem 1.6rem;border-bottom:1px solid var(--gray2);display:flex;align-items:center;justify-content:space-between}
+.modal-h h2{font-size:1rem;font-weight:600}
+.modal-close{width:30px;height:30px;border:none;background:var(--gray1);border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray4)}
+.modal-close:hover{background:var(--gray2)}
+.modal-body{padding:1.6rem;display:flex;flex-direction:column;gap:1.1rem}
+.help-step{display:flex;gap:12px}
+.help-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:600;flex-shrink:0;color:#fff}
+.help-text strong{font-size:.88rem;font-weight:600;display:block;margin-bottom:2px}
+.help-text p{font-size:.82rem;color:var(--gray4);line-height:1.55}
+.h-empty{text-align:center;padding:3rem;color:var(--gray3)}
+.h-list{display:flex;flex-direction:column;gap:7px}
+.hi{background:#fff;border:1px solid var(--gray2);border-radius:9px;padding:.95rem 1.15rem;display:flex;align-items:center;justify-content:space-between;gap:.9rem;transition:all .14s}
+.hi:hover{border-color:var(--blueL);box-shadow:var(--sh)}
+.hi-info{flex:1;min-width:0}
+.hi-name{font-size:.88rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hi-meta{font-size:.73rem;color:var(--gray4);margin-top:2px;display:flex;align-items:center;gap:6px}
+.hi-prod{font-size:.68rem;font-weight:600;padding:.15rem .42rem;border-radius:4px;color:#fff}
+.hi-acts{display:flex;gap:5px}
+.ib{width:30px;height:30px;border:1px solid var(--gray2);border-radius:7px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .14s;color:var(--gray4)}
+.ib:hover{background:var(--gray1)}
+.ib svg{width:13px;height:13px}
+.toast-c{position:fixed;bottom:1.4rem;right:1.4rem;display:flex;flex-direction:column;gap:7px;z-index:200}
+.toast{background:#1e293b;color:#fff;padding:.65rem 1rem;border-radius:9px;font-size:.81rem;display:flex;align-items:center;gap:7px;box-shadow:0 4px 20px rgba(0,0,0,.2);animation:si .18s ease}
+.toast.ok{background:var(--green)}.toast.err{background:var(--red)}
+@keyframes si{from{transform:translateX(16px);opacity:0}to{transform:none;opacity:1}}
+@media(max-width:680px){.sidebar{display:none}.fg,.fg.c3,.pg,.pg3{grid-template-columns:1fr}.fgr.s2{grid-column:span 1}.content{padding:1rem}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="brand">Generatore<br>Analisi Vittoria</div>
+    <div class="sub">Tutela Legale</div>
+  </div>
+  <div class="prod-pills">
+    <div class="prod-pills-label">Prodotto</div>
+    <button class="pp sel" id="pp-azienda" onclick="selectProduct('azienda',this)"><span class="dot" style="background:#2E5FA3"></span>Tutela in Azienda</button>
+    <button class="pp" id="pp-professionisti" onclick="selectProduct('professionisti',this)"><span class="dot" style="background:#375623"></span>Tutela Professionista</button>
+    <button class="pp" id="pp-circolazione" onclick="selectProduct('circolazione',this)"><span class="dot" style="background:#C55A11"></span>Tutela Circolazione Business</button>
+    <button class="pp" id="pp-patente" onclick="selectProduct('patente',this)"><span class="dot" style="background:#0D7377"></span>Tutela Ritiro Patente Business</button>
+  </div>
+  <nav class="sb-nav">
+    <div class="ns">Strumenti</div>
+    <button class="ni active" id="nav-form" onclick="showView('formView',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>Nuovo cliente
+    </button>
+    <button class="ni" id="nav-storico" onclick="showView('storicoView',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Storico analisi
+    </button>
+    <div class="ns">Supporto</div>
+    <button class="ni" onclick="openHelp()">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 17v-5M12 8v.01"/></svg>Come usare l'app
+    </button>
+  </nav>
+  <div class="sb-foot">
+    <div class="al">API Key Anthropic</div>
+    <input class="api-in" type="password" id="apiKey" placeholder="sk-ant-api03-...">
+    <div class="api-hint">Salvata localmente nel browser</div>
+  </div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div>
+      <div class="tb-title" id="tb-title">Nuova analisi cliente</div>
+      <div class="tb-sub" id="tb-sub">Seleziona il prodotto, poi compila o carica il bilancio</div>
+    </div>
+    <div class="tb-badge" id="tb-badge" style="background:rgba(46,95,163,.1);color:#2E5FA3">Tutela in Azienda</div>
+  </header>
+  <div class="content">
+    <div class="view active" id="formView">
+      <div class="fc">
+        <div class="fh">
+          <div class="fhi" id="fh-icon" style="background:rgba(31,56,100,.08)">
+            <svg fill="none" stroke="#1F3864" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+          </div>
+          <div>
+            <div class="fh-title" id="fh-title">Dati cliente — Tutela in Azienda</div>
+            <div class="fh-sub">Compila manualmente o carica il PDF del bilancio per estrazione automatica</div>
+          </div>
+        </div>
+        <div class="fb">
+          <div class="fs-title">Importazione automatica da bilancio / visura</div>
+          <div class="uz" id="uz">
+            <input type="file" accept=".pdf" id="pdfIn" onchange="handlePdf(event)">
+            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414A1 1 0 0119 9.414V19a2 2 0 01-2 2z"/></svg>
+            <div class="ut" id="ut">Trascina il PDF del bilancio o clicca per selezionare</div>
+            <div class="us" id="us">Visura camerale con bilancio allegato — i dati vengono estratti automaticamente</div>
+          </div>
+          <div id="pdf-badge" style="display:none" class="pdf-b">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="12" height="12"><path d="M5 13l4 4L19 7"/></svg>
+            <span id="pdf-name"></span> — estratto
+          </div>
+          <div style="margin:1.6rem 0;display:flex;align-items:center;gap:.7rem">
+            <div style="flex:1;height:1px;background:var(--gray2)"></div>
+            <span style="font-size:.72rem;color:var(--gray3)">oppure inserisci manualmente</span>
+            <div style="flex:1;height:1px;background:var(--gray2)"></div>
+          </div>
+          <div id="form-fields"></div>
+
+          <div style="margin-top:1.4rem">
+            <div class="fs-title">Note aggiuntive</div>
+            <div class="fgr">
+              <label class="lbl">Informazioni rilevanti per l'analisi</label>
+              <textarea id="note" placeholder="es. Recenti ispezioni subite, nuovi contratti, particolarità operative..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="fa">
+          <button class="btn btn-s" onclick="resetForm()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0115.46-4.46M20 15a9 9 0 01-15.46 4.46"/></svg>Reset
+          </button>
+          <button class="btn btn-p" id="genBtn" onclick="startGen()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Genera analisi
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="view" id="generatingView">
+      <div class="gc">
+        <div class="g-hd">
+          <div class="g-sp" id="g-sp"></div>
+          <div><div class="g-title">Analisi in corso...</div><div class="g-sub">Elaborazione profilo cliente</div></div>
+        </div>
+        <div class="g-steps" id="g-steps"></div>
+        <div class="g-pb"><div class="g-pbb" id="g-pbb"></div></div>
+      </div>
+    </div>
+    <div class="view" id="outputView">
+      <div class="o-hd">
+        <div>
+          <div class="o-title" id="o-title">Analisi —</div>
+          <div class="o-meta" id="o-meta"></div>
+        </div>
+        <div class="o-acts">
+          <button class="btn btn-s" onclick="showView('formView',document.getElementById('nav-form'))">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>Nuovo
+          </button>
+          <button class="btn btn-o" onclick="copyAnal()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>Copia testo
+          </button>
+          <button class="btn btn-p" onclick="exportPDF()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414A1 1 0 0119 9.414V19a2 2 0 01-2 2z"/></svg>Esporta PDF
+          </button>
+        </div>
+      </div>
+      <div class="o-tabs">
+        <button class="ot active" onclick="switchTab('analisi',this)">📋 Analisi</button>
+        <button class="ot" onclick="switchTab('proposte',this)">💼 Proposte</button>
+        <button class="ot" onclick="switchTab('prompt',this)">🎯 Prompt presentazione</button>
+      </div>
+      <div class="o-content">
+        <div class="tp active" id="tp-analisi"><div class="at" id="anal-out"></div></div>
+        <div class="tp" id="tp-proposte">
+          <div id="prop-empty" style="text-align:center;padding:3rem;color:var(--gray4)">
+            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" width="40" height="40" style="margin:0 auto .75rem;display:block;color:var(--gray3)"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div style="font-size:.95rem;font-weight:600;color:var(--dark);margin-bottom:.4rem">Inserisci i premi per generare le proposte</div>
+            <div style="font-size:.82rem;color:var(--gray4);margin-bottom:1.4rem">Vai sul preventivatore Vittoria, poi torna qui con i premi delle 3 opzioni</div>
+            <button class="btn btn-p" onclick="openPremiModal()">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Inserisci premi e genera proposte
+            </button>
+          </div>
+          <div id="prop-out" style="display:none"><div class="pg3" id="prop-cards"></div></div>
+        </div>
+        <div class="tp" id="tp-prompt">
+          <div style="margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-size:.9rem;font-weight:600;color:var(--dark)">Prompt per generare la presentazione</div>
+              <div style="font-size:.78rem;color:var(--gray4);margin-top:2px">Copia e incolla su Claude.ai o altro AI per ottenere le slide personalizzate</div>
+            </div>
+            <button class="btn btn-o" onclick="copyPromptPres()">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>Copia prompt
+            </button>
+          </div>
+          <div style="background:var(--gray1);border:1px solid var(--gray2);border-radius:var(--r);padding:1.25rem;font-size:.83rem;line-height:1.7;color:var(--dark);white-space:pre-wrap;font-family:monospace" id="prompt-pres-text"></div>
+        </div>
+      </div>
+    </div>
+    <div class="view" id="storicoView">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.15rem">
+        <div>
+          <div style="font-size:1.05rem;font-weight:600">Storico analisi</div>
+          <div style="font-size:.78rem;color:var(--gray4);margin-top:2px">Analisi salvate in questa sessione</div>
+        </div>
+        <button class="btn btn-s" style="font-size:.76rem" onclick="clearHist()">Svuota storico</button>
+      </div>
+      <div id="stor-content"></div>
+    </div>
+  </div>
+</main>
+</div>
+<div class="modal-bg" id="help-modal" style="display:none" onclick="if(event.target===this)closeHelp()">
+  <div class="modal">
+    <div class="modal-h">
+      <h2>Come usare il Generatore</h2>
+      <button class="modal-close" onclick="closeHelp()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14" height="14"><path d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="help-step"><div class="help-num" style="background:var(--navy)">1</div><div class="help-text"><strong>Inserisci la chiave API</strong><p>In basso a sinistra nella sidebar inserisci la tua chiave API Anthropic (inizia con sk-ant-). Ottienila su console.anthropic.com. Viene salvata solo nel tuo browser.</p></div></div>
+      <div class="help-step"><div class="help-num" style="background:var(--blue)">2</div><div class="help-text"><strong>Seleziona il prodotto</strong><p>Scegli tra i 4 prodotti Vittoria nella sidebar. Il form si adatta automaticamente.</p></div></div>
+      <div class="help-step"><div class="help-num" style="background:var(--orange)">3</div><div class="help-text"><strong>Carica il PDF o compila il form</strong><p>Trascina la visura camerale con bilancio: i dati vengono estratti automaticamente. In alternativa compila manualmente.</p></div></div>
+      <div class="help-step"><div class="help-num" style="background:var(--green)">4</div><div class="help-text"><strong>Aggiungi i premi (opzionale)</strong><p>Dopo il preventivo su Vittoria inserisci i premi nelle caselle. Se lasci vuoto usa stime indicative.</p></div></div>
+      <div class="help-step"><div class="help-num" style="background:var(--teal)">5</div><div class="help-text"><strong>Genera e usa l'analisi</strong><p>Clicca Genera analisi. In 30-60 secondi ottieni analisi completa, 3 proposte personalizzate ed export PDF pronto per l'appuntamento.</p></div></div>
+    </div>
+  </div>
+</div>
+<!-- Modale premi -->
+<div class="modal-bg" id="premi-modal" style="display:none" onclick="if(event.target===this)closePremiModal()">
+  <div class="modal">
+    <div class="modal-h">
+      <h2>Inserisci i premi preventivati</h2>
+      <button class="modal-close" onclick="closePremiModal()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14" height="14"><path d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:.82rem;color:var(--gray4)">Inserisci i premi dal preventivatore Vittoria. Il sistema genererà le 3 card proposte personalizzate per questo cliente.</div>
+      <div id="premi-modal-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:.5rem"></div>
+      <div style="display:flex;justify-content:flex-end;gap:.75rem;margin-top:.5rem">
+        <button class="btn btn-s" onclick="closePremiModal()">Annulla</button>
+        <button class="btn btn-p" onclick="generaProposte()">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Genera proposte
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-c" id="toast-c"></div>
+<script>
+// ── Costanti marker (evita problemi con backtick nei template literal) ──
+var BT = String.fromCharCode(96);
+var JSON_START = BT+BT+BT+'json-proposte';
+var JSON_END = BT+BT+BT;
+
+// ── Campi form per prodotto ─────────────────────────────────
+var FIELDS = {
+azienda: '<div class="fs-title">Anagrafica</div><div class="fg" style="margin-bottom:1.1rem"><div class="fgr s2"><label class="lbl">Ragione sociale <span class="r">*</span></label><input type="text" id="ragSoc" placeholder="es. S.M.A. Srl"></div><div class="fgr"><label class="lbl">Sede</label><input type="text" id="sede" placeholder="es. Bergamo (BG)"></div><div class="fgr"><label class="lbl">Forma giuridica</label><select id="forma"><option value="">Seleziona...</option><option>S.r.l.</option><option>S.r.l. Unipersonale</option><option>S.p.A.</option><option>S.n.c.</option><option>S.a.s.</option><option>Ditta individuale</option><option>Impresa artigiana</option></select></div><div class="fgr"><label class="lbl">Titolare / Amministratore</label><input type="text" id="titolare" placeholder="es. Rossi Mario"></div><div class="fgr"><label class="lbl">ATECO</label><input type="text" id="ateco" placeholder="es. 25.12.10"></div><div class="fgr"><label class="lbl">Attivita svolta</label><input type="text" id="attivita" placeholder="es. Fabbricazione serramenti"></div></div><div class="fs-title">Dati economici</div><div class="fg c3" style="margin-bottom:1.1rem"><div class="fgr"><label class="lbl">Fatturato (EUR) <span class="r">*</span></label><input type="number" id="fatt" placeholder="es. 787913"></div><div class="fgr"><label class="lbl">Patrimonio netto (EUR)</label><input type="number" id="pn" placeholder="es. 103641"></div><div class="fgr"><label class="lbl">Crediti vs clienti (EUR)</label><input type="number" id="cred" placeholder="es. 138005"></div><div class="fgr"><label class="lbl">Costo materie prime (EUR)</label><input type="number" id="mat" placeholder="es. 402822"></div><div class="fgr"><label class="lbl">Costo personale (EUR)</label><input type="number" id="pers" placeholder="es. 32534"></div><div class="fgr"><label class="lbl">Utile esercizio (EUR)</label><input type="number" id="utile" placeholder="es. 20514"></div></div><div class="fs-title">Operativita</div><div class="fg" style="margin-bottom:1.1rem"><div class="fgr"><label class="lbl">N dipendenti <span class="r">*</span></label><input type="number" id="dip" placeholder="es. 5" min="0"></div><div class="fgr"><label class="lbl">Clientela</label><select id="clientela"><option value="">Seleziona...</option><option>B2B (aziende)</option><option>B2C (privati)</option><option>Misto B2B/B2C</option><option>Pubblica amministrazione</option></select></div><div class="fgr"><label class="lbl">Lavori presso terzi</label><select id="lavTerzi"><option value="no">No</option><option>Si, occasionalmente</option><option>Si, regolarmente</option></select></div><div class="fgr"><label class="lbl">Polizza RC Vittoria esistente</label><div class="tg"><button class="tb ay" id="rcSi" onclick="tgRcY()">Si</button><button class="tb" id="rcNo" onclick="tgRcN()">No</button></div></div></div>',
+
+professionisti: '<div class="fs-title">Anagrafica professionista</div><div class="fg" style="margin-bottom:1.1rem"><div class="fgr s2"><label class="lbl">Nome e cognome <span class="r">*</span></label><input type="text" id="ragSoc" placeholder="es. Dott. Rossi Mario"></div><div class="fgr"><label class="lbl">Sede / Citta</label><input type="text" id="sede" placeholder="es. Milano (MI)"></div><div class="fgr"><label class="lbl">Professione <span class="r">*</span></label><select id="professione"><option value="">Seleziona...</option><option>Avvocato</option><option>Commercialista / Revisore</option><option>Ingegnere / Architetto</option><option>Medico / Dentista</option><option>Consulente aziendale</option><option>Notaio</option><option>Geometra / Perito</option><option>Altro professionista</option></select></div><div class="fgr"><label class="lbl">Iscrizione albo</label><input type="text" id="albo" placeholder="es. Ordine Avvocati Milano"></div><div class="fgr"><label class="lbl">Fatturato annuo (EUR)</label><input type="number" id="fatt" placeholder="es. 150000"></div><div class="fgr"><label class="lbl">N collaboratori</label><input type="number" id="dip" placeholder="es. 2" min="0"></div></div><div class="fs-title">Operativita</div><div class="fg" style="margin-bottom:1.1rem"><div class="fgr"><label class="lbl">Tipo clientela</label><select id="clientela"><option value="">Seleziona...</option><option>Privati</option><option>Aziende</option><option>Enti pubblici</option><option>Misto</option></select></div><div class="fgr"><label class="lbl">Attivita pubblica (PA)</label><div class="tg"><button class="tb" id="paSi" onclick="tgPaY()">Si</button><button class="tb ay" id="paNo" onclick="tgPaN()">No</button></div></div><div class="fgr"><label class="lbl">RC Professionale esistente</label><div class="tg"><button class="tb ay" id="rcSi" onclick="tgRcY()">Si</button><button class="tb" id="rcNo" onclick="tgRcN()">No</button></div></div><div class="fgr"><label class="lbl">Massimale RC Professionale (EUR)</label><input type="number" id="massRc" placeholder="es. 500000"></div></div>',
+
+circolazione: '<div class="fs-title">Anagrafica azienda</div><div class="fg" style="margin-bottom:1.1rem"><div class="fgr s2"><label class="lbl">Ragione sociale <span class="r">*</span></label><input type="text" id="ragSoc" placeholder="es. Trasporti Rossi Srl"></div><div class="fgr"><label class="lbl">Sede</label><input type="text" id="sede" placeholder="es. Brescia (BS)"></div><div class="fgr"><label class="lbl">Settore attivita</label><input type="text" id="attivita" placeholder="es. Autotrasporto merci"></div><div class="fgr"><label class="lbl">Fatturato (EUR)</label><input type="number" id="fatt" placeholder="es. 500000"></div></div><div class="fs-title">Flotta e conducenti</div><div class="fg" style="margin-bottom:1.1rem"><div class="fgr"><label class="lbl">N veicoli aziendali <span class="r">*</span></label><input type="number" id="veicoli" placeholder="es. 8" min="1"></div><div class="fgr"><label class="lbl">Tipo veicoli</label><select id="tipoVeicoli"><option value="">Seleziona...</option><option>Auto aziendali</option><option>Furgoni / Commerciali</option><option>Autocarri / Pesanti</option><option>Misto auto + furgoni</option></select></div><div class="fgr"><label class="lbl">N dipendenti alla guida <span class="r">*</span></label><input type="number" id="dip" placeholder="es. 6" min="0"></div><div class="fgr"><label class="lbl">Km annui stimati (flotta)</label><input type="number" id="km" placeholder="es. 200000"></div><div class="fgr"><label class="lbl">Guida notturna / autostradale</label><div class="tg"><button class="tb" id="notSi" onclick="tgNotY()">Si</button><button class="tb ay" id="notNo" onclick="tgNotN()">No</button></div></div><div class="fgr"><label class="lbl">Guida fuori Italia</label><div class="tg"><button class="tb" id="estSi" onclick="tgEstY()">Si</button><button class="tb ay" id="estNo" onclick="tgEstN()">No</button></div></div></div>',
+
+patente: '<div class="fs-title">Anagrafica azienda</div><div class="fg" style="margin-bottom:1.1rem"><div class="fgr s2"><label class="lbl">Ragione sociale <span class="r">*</span></label><input type="text" id="ragSoc" placeholder="es. Logistica Bianchi Srl"></div><div class="fgr"><label class="lbl">Sede</label><input type="text" id="sede" placeholder="es. Verona (VR)"></div><div class="fgr"><label class="lbl">Settore</label><input type="text" id="attivita" placeholder="es. Distribuzione alimentare"></div><div class="fgr"><label class="lbl">Fatturato (EUR)</label><input type="number" id="fatt" placeholder="es. 800000"></div></div><div class="fs-title">Dipendenti e figure da tutelare</div><div class="fg" style="margin-bottom:1.1rem"><div class="fgr"><label class="lbl">N dipendenti alla guida <span class="r">*</span></label><input type="number" id="dip" placeholder="es. 10" min="1"></div><div class="fgr"><label class="lbl">Tipo patente prevalente</label><select id="tipoPatente"><option value="">Seleziona...</option><option>B (auto/furgone)</option><option>C (autocarro)</option><option>CE (autotreno)</option><option>D (autobus)</option><option>CQC</option></select></div><div class="fgr"><label class="lbl">Figura chiave</label><input type="text" id="figChiave" placeholder="es. Titolare che guida"></div><div class="fgr"><label class="lbl">Sostituto disponibile</label><div class="tg"><button class="tb" id="subSi" onclick="tgSubY()">Si</button><button class="tb ay" id="subNo" onclick="tgSubN()">No</button></div></div><div class="fgr"><label class="lbl">Costo conducente esterno (EUR/gg)</label><input type="number" id="costoSub" placeholder="es. 250"></div><div class="fgr"><label class="lbl">Storico sospensioni 3 anni</label><select id="storico"><option value="nessuno">Nessuno</option><option value="1">1</option><option value="2-3">2-3</option><option value="piu di 3">Piu di 3</option></select></div></div>'
+};
+
+var PREMI_CFG = {
+  azienda: [{label:'Essenziale',col:'#2E5FA3',ph:'381'},{label:'Completa',col:'#FFC000',ph:'541'},{label:'Premium',col:'#C55A11',ph:'1021'}],
+  professionisti: [{label:'Base',col:'#375623',ph:''},{label:'Completa',col:'#70AD47',ph:''},{label:'Premium',col:'#FFC000',ph:''}],
+  circolazione: [{label:'Base circolazione',col:'#C55A11',ph:''},{label:'+ Contr. e Amm.',col:'#ED7D31',ph:''},{label:'+ Perdite Econ.',col:'#FFC000',ph:''}],
+  patente: [{label:'Opzione 1',col:'#0D7377',ph:''},{label:'Opzione 2',col:'#14A0A5',ph:''},{label:'Opzione 3',col:'#FFC000',ph:''}]
+};
+
+var PROD_CFG = {
+  azienda:  {name:'Tutela in Azienda',color:'#2E5FA3',bg:'rgba(46,95,163,.1)',steps:['Profilo aziendale e analisi rischi','Gap analysis coperture RC esistenti','Costruzione 3 proposte personalizzate','Tutela Legale — analisi autonoma','Spunti trattativa per l\'agente']},
+  professionisti:{name:'Tutela Professionista',color:'#375623',bg:'rgba(55,86,35,.1)',steps:['Profilo professionista','Analisi rischi specifici','Gap analysis RC professionale','3 proposte Tutela Professionista','Spunti trattativa']},
+  circolazione:{name:'Tutela Circolazione Business',color:'#C55A11',bg:'rgba(197,90,17,.1)',steps:['Profilo flotta e rischi circolazione','Gap analysis RCA','Costruzione proposte','Scenari sinistro concreti','Spunti trattativa']},
+  patente:  {name:'Tutela Ritiro Patente Business',color:'#0D7377',bg:'rgba(13,115,119,.1)',steps:['Profilo azienda e figure chiave','Calcolo impatto economico sospensione','Identificazione assicurati','Proposta e diaria ottimale','Spunti trattativa']}
+};
+
+// ── Costruttori prompt ────────────────────────────────────────
+function buildJsonInstruction() {
+  var garanzie_disponibili =
+    'GARANZIE DISPONIBILI Vittoria Tutela in Azienda (usa SOLO questi nomi esatti):\n' +
+    'PACCHETTO BASE — sempre incluso in tutte e 3 le opzioni:\n' +
+    '  "Difesa penale colposa (D.Lgs. 81/2008)"\n' +
+    '  "Opposizione sanzioni amministrative (ASL, INAIL, Privacy)"\n' +
+    '  "Sicurezza, Privacy e Cyber (GDPR, data breach)"\n' +
+    'ESTENSIONI — da distribuire tra le opzioni in base ai rischi del cliente:\n' +
+    '  "Tutela danni extracontrattuali (EUR 25.000)"\n' +
+    '  "Retroattivita procedimenti penali (2 anni)"\n' +
+    '  "Contrattuale Light (fornitori + clienti, 2 casi/anno)"\n' +
+    '  "Contrattuale Completo (fornitori + lavoro dipendente + locazione)"\n' +
+    '  "Controversie clienti — 5 casi di cui 2 in giudizio"\n' +
+    '  "Controversie clienti — 10 casi di cui 2 in giudizio"\n' +
+    '  "Pacchetto Fisco e Previdenza (Commissione Tributaria + INPS/INAIL)"\n' +
+    '  "Pacchetto Proprieta Intellettuale e Concorrenza"\n';
+
+  var regole =
+    'REGOLE PER LA COSTRUZIONE DELLE 3 OPZIONI:\n' +
+    '1. Tutte e 3 le opzioni devono sempre includere le 3 garanzie del Pacchetto Base.\n' +
+    '2. Le estensioni vengono distribuite in base ai rischi SPECIFICI di questo cliente:\n' +
+    '   - Essenziale: pacchetto base + le 2-3 estensioni piu urgenti per questo profilo\n' +
+    '   - Completa (consigliata): tutto di Essenziale + altre 3-4 estensioni prioritarie\n' +
+    '   - Premium: copertura massima con tutte le estensioni pertinenti al settore\n' +
+    '3. Esempio: per un cliente con molti dipendenti alla guida metti Fisco e Previdenza\n' +
+    '   gia in Essenziale; per un manifatturiero con crediti alti metti Controversie\n' +
+    '   clienti gia in Essenziale; per chi ha attivita pubblica aggiungi Fisco.\n' +
+    '4. Non mettere mai "Controversie clienti 10 casi" e "5 casi" nella stessa opzione.\n' +
+    '5. La leva commerciale deve essere 1 frase concreta ancorata ai dati di questo cliente.\n';
+
+  return '\n\nIMPORTANTE: alla fine del testo aggiungi OBBLIGATORIAMENTE questo blocco JSON.\n' +
+    garanzie_disponibili + regole +
+    'FORMATO OBBLIGATORIO (rispetta esattamente questa struttura):\n' +
+    JSON_START + '\n' +
+    '[\n' +
+    '  {"nome":"Essenziale","consigliata":false,"leva":"...","garanzie_incluse":[...],"garanzie_escluse":[...]},\n' +
+    '  {"nome":"Completa","consigliata":true,"leva":"...","garanzie_incluse":[...],"garanzie_escluse":[...]},\n' +
+    '  {"nome":"Premium","consigliata":false,"leva":"...","garanzie_incluse":[...],"garanzie_escluse":[...]}\n' +
+    ']\n' +
+    JSON_END;
+}
+
+function ef(v){return v?'EUR '+Number(v).toLocaleString('it-IT'):'n.d.';}
+
+function buildPrompt(d) {
+  var base = '';
+  if(prod==='azienda') {
+    base = 'Sei consulente assicurativo senior PMI italiane — Vittoria Tutela in Azienda.\n\n' +
+      'DATI CLIENTE:\n- Ragione sociale: '+(d.ragSoc||'n.d.')+', '+(d.forma||'')+' — '+(d.sede||'')+'\n' +
+      '- Titolare: '+(d.titolare||'n.d.')+' | ATECO: '+(d.ateco||'n.d.')+' — '+(d.attivita||'n.d.')+'\n' +
+      '- Fatturato: '+ef(d.fatt)+' | Patrimonio netto: '+ef(d.pn)+'\n' +
+      '- Crediti vs clienti: '+ef(d.cred)+' | Costo materie: '+ef(d.mat)+'\n' +
+      '- Costo personale: '+ef(d.pers)+' | Utile: '+ef(d.utile)+'\n' +
+      '- Dipendenti: '+(d.dip||'n.d.')+' | Clientela: '+(d.clientela||'n.d.')+'\n' +
+      '- Lavori presso terzi: '+(d.lavTerzi||'no')+' | RC Vittoria: '+(d.rc?'Si':'No')+'\n' +
+      (d.note?'- Note: '+d.note+'\n':'')+
+      '\nPREMI: Essenziale '+(d.p1||'da prev.')+' | Completa '+(d.p2||'da prev.')+' | Premium '+(d.p3||'da prev.')+'\n\n' +
+      'Produci analisi con titoli:\n# 1. Profilo aziendale\n# 2. Analisi coperture esistenti\n# 3. Gap analysis\n# 4. Proposte Tutela Legale in Azienda\n# 5. Tutela Legale analisi autonoma\n# 6. Spunti per l\'agente\nStile professionale, concreto, dati numerici specifici.';
+  } else if(prod==='professionisti') {
+    base = 'Sei consulente assicurativo senior — Vittoria Tutela Professionista.\n\n' +
+      'DATI:\n- Nome: '+(d.ragSoc||'n.d.')+' | Professione: '+(d.professione||'n.d.')+'\n' +
+      '- Sede: '+(d.sede||'n.d.')+' | Albo: '+(d.albo||'n.d.')+'\n' +
+      '- Fatturato: '+ef(d.fatt)+' | Collaboratori: '+(d.dip||'0')+'\n' +
+      '- Clientela: '+(d.clientela||'n.d.')+' | Attivita PA: '+(d.pa?'Si':'No')+'\n' +
+      '- RC Professionale: '+(d.rc?'Si':'No')+(d.massRc?' (max '+ef(d.massRc)+')':'')+'\n' +
+      (d.note?'- Note: '+d.note+'\n':'')+
+      '\nPREMI: '+(d.p1||'da prev.')+' | '+(d.p2||'da prev.')+' | '+(d.p3||'da prev.')+'\n\n' +
+      'Produci analisi:\n# 1. Profilo professionista\n# 2. Analisi coperture esistenti\n# 3. Gap analysis\n# 4. Proposte Tutela Professionista\n# 5. Scenari di rischio concreti\n# 6. Spunti per l\'agente\nStile professionale, orientato alla tutela del patrimonio personale.';
+  } else if(prod==='circolazione') {
+    base = 'Sei consulente assicurativo senior — Vittoria Tutela Circolazione Business.\n\n' +
+      'DATI FLOTTA:\n- Azienda: '+(d.ragSoc||'n.d.')+' — '+(d.attivita||'n.d.')+' — '+(d.sede||'')+'\n' +
+      '- Fatturato: '+ef(d.fatt)+' | Veicoli: '+(d.veicoli||'n.d.')+' ('+( d.tipoVeicoli||'n.d.')+')\n' +
+      '- Conducenti: '+(d.dip||'n.d.')+' | Km annui: '+(d.km||'n.d.')+'\n' +
+      '- Guida notturna: '+(d.not?'Si':'No')+' | Estero: '+(d.est?'Si':'No')+'\n' +
+      (d.note?'- Note: '+d.note+'\n':'')+
+      '\nPREMI: '+(d.p1||'da prev.')+' | '+(d.p2||'da prev.')+' | '+(d.p3||'da prev.')+'\n\n' +
+      'Produci analisi:\n# 1. Profilo flotta e rischi circolazione\n# 2. Analisi coperture esistenti\n# 3. Gap analysis\n# 4. Proposte Tutela Circolazione Business\n# 5. Scenari di rischio concreti\n# 6. Spunti per l\'agente\nStile concreto, orientato alla continuita operativa.';
+  } else {
+    base = 'Sei consulente assicurativo senior — Vittoria Tutela Ritiro Patente Business.\n\n' +
+      'DATI:\n- Azienda: '+(d.ragSoc||'n.d.')+' — '+(d.attivita||'n.d.')+' — '+(d.sede||'')+'\n' +
+      '- Fatturato: '+ef(d.fatt)+' | Dipendenti alla guida: '+(d.dip||'n.d.')+' (patente '+(d.tipoPatente||'n.d.')+')\n' +
+      '- Figura chiave: '+(d.figChiave||'n.d.')+' | Sostituto: '+(d.sub?'Si':'No')+'\n' +
+      '- Costo conducente esterno: '+(d.costoSub?'EUR '+d.costoSub+'/gg':'n.d.')+' | Storico: '+(d.storico||'nessuno')+'\n' +
+      (d.note?'- Note: '+d.note+'\n':'')+
+      '\nPREMI: '+(d.p1||'da prev.')+' | '+(d.p2||'da prev.')+' | '+(d.p3||'da prev.')+'\n\n' +
+      'Produci analisi:\n# 1. Profilo e figure da tutelare\n# 2. Impatto economico sospensione patente\n# 3. Gap analysis\n# 4. Proposta Tutela Ritiro Patente Business\n# 5. Scenari concreti con calcoli\n# 6. Spunti per l\'agente\nStile concreto, numeri chiari, focus su continuita operativa.';
+  }
+  return base + buildJsonInstruction();
+}
+
+// ── State ─────────────────────────────────────────────────────
+var prod = 'azienda';
+var toggles = {rc:true,pa:false,not:false,est:false,sub:false};
+var curAnalysis = '';
+var curProposte = null;
+var curPremi = ['','',''];
+var curPromptPres = '';
+var analHist = JSON.parse(localStorage.getItem('vgen_hist')||'[]');
+
+// ── Product selection ──────────────────────────────────────
+function selectProduct(id, el) {
+  prod = id;
+  document.querySelectorAll('.pp').forEach(function(p){p.classList.remove('sel');});
+  el.classList.add('sel');
+  var cfg = PROD_CFG[id];
+  document.getElementById('tb-badge').textContent = cfg.name;
+  document.getElementById('tb-badge').style.background = cfg.bg;
+  document.getElementById('tb-badge').style.color = cfg.color;
+  document.getElementById('fh-title').textContent = 'Dati cliente — '+cfg.name;
+  renderFormFields();
+}
+
+function renderFormFields() {
+  document.getElementById('form-fields').innerHTML = FIELDS[prod] || '';
+  toggles = {rc:true,pa:false,not:false,est:false,sub:false};
+  setTimeout(function(){
+    ['rcSi','rcNo','paSi','paNo','notSi','notNo','estSi','estNo','subSi','subNo'].forEach(function(k){
+      var el=document.getElementById(k); if(el) el.className='tb';
+    });
+    ['rcSi','paNo','notNo','estNo','subNo'].forEach(function(k){
+      var el=document.getElementById(k); if(el) el.classList.add('ay');
+    });
+  },10);
+}
+
+function renderPremiGrid() {
+  var premi = PREMI_CFG[prod] || [];
+  document.getElementById('premi-grid').innerHTML = premi.map(function(p,i){
+    return '<div class="pc"><div class="pkl"><span class="pd" style="background:'+p.col+'"></span>'+p.label+'</div><div style="display:flex;align-items:baseline"><span class="ep">EUR</span><input type="number" id="p'+(i+1)+'" placeholder="'+(p.ph||'—')+'"></div></div>';
+  }).join('');
+}
+
+function tg(key, val) {
+  toggles[key] = val;
+  var map = {rc:['rcSi','rcNo'],pa:['paSi','paNo'],not:['notSi','notNo'],est:['estSi','estNo'],sub:['subSi','subNo']};
+  var ids = map[key]; if(!ids) return;
+  var si=document.getElementById(ids[0]), no=document.getElementById(ids[1]);
+  if(si) si.className='tb'+(val?' ay':'');
+  if(no) no.className='tb'+(!val?' ay':'');
+}
+
+// ── Nav ────────────────────────────────────────────────────
+function tgRcY(){tg('rc',true);}  function tgRcN(){tg('rc',false);}
+function tgPaY(){tg('pa',true);}  function tgPaN(){tg('pa',false);}
+function tgNotY(){tg('not',true);} function tgNotN(){tg('not',false);}
+function tgEstY(){tg('est',true);} function tgEstN(){tg('est',false);}
+function tgSubY(){tg('sub',true);} function tgSubN(){tg('sub',false);}
+function showView(id, navEl) {
+  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('active');});
+  if(navEl) navEl.classList.add('active');
+  var map = {formView:['Nuova analisi cliente','Seleziona il prodotto, poi compila o carica il bilancio'],generatingView:['Generazione in corso...','Claude sta elaborando l\'analisi'],outputView:['Analisi generata','Pronta per l\'appuntamento'],storicoView:['Storico analisi','Analisi salvate in questa sessione']};
+  var t = map[id]||['',''];
+  document.getElementById('tb-title').textContent = t[0];
+  document.getElementById('tb-sub').textContent = t[1];
+  if(id==='storicoView') renderHist();
+}
+
+function switchTab(n, btn) {
+  document.querySelectorAll('.tp').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.ot').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tp-'+n).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── PDF upload ─────────────────────────────────────────────
+function handlePdf(e) {
+  var file = e.target.files[0]; if(!file) return;
+  var apiKey = document.getElementById('apiKey').value.trim();
+  if(!apiKey){toast('Inserisci prima la chiave API','err');return;}
+  var uz=document.getElementById('uz');
+  document.getElementById('ut').textContent='Estrazione dati in corso...';
+  uz.classList.add('hf');
+  toB64(file).then(function(b64){
+    return fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:[{type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}},{type:'text',text:'Estrai dal documento e rispondi SOLO con JSON valido:\n{"ragSoc":"","sede":"","forma":"","titolare":"","ateco":"","attivita":"","fatt":0,"pn":0,"cred":0,"mat":0,"pers":0,"utile":0,"dip":0}\nSolo JSON, nessun testo.'}]}]})
+    });
+  }).then(function(r){return r.json();}).then(function(data){
+    var txt = data.content&&data.content[0]?data.content[0].text:'';
+    var obj = JSON.parse(txt.replace(/```[a-z]*/g,'').replace(/```/g,'').trim());
+    ['ragSoc','sede','titolare','ateco','attivita','fatt','pn','cred','mat','pers','utile','dip'].forEach(function(k){
+      var el=document.getElementById(k); if(el&&obj[k]) el.value=obj[k];
+    });
+    if(obj.forma&&document.getElementById('forma')){
+      var sel=document.getElementById('forma');
+      for(var i=0;i<sel.options.length;i++) if(sel.options[i].value.toLowerCase().indexOf((obj.forma||'').toLowerCase())>-1){sel.value=sel.options[i].value;break;}
+    }
+    document.getElementById('pdf-badge').style.display='inline-flex';
+    document.getElementById('pdf-name').textContent=file.name;
+    document.getElementById('ut').textContent='PDF elaborato — verifica i campi';
+    toast('Dati estratti con successo','ok');
+  }).catch(function(err){
+    document.getElementById('ut').textContent='Errore estrazione — compila manualmente';
+    uz.classList.remove('hf');
+    toast('Errore: '+err.message,'err');
+  });
+}
+
+function toB64(f){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(r.result.split(',')[1]);};r.onerror=function(){rej(new Error('Lettura fallita'));};r.readAsDataURL(f);});}
+
+// ── Generation ─────────────────────────────────────────────
+function collectData() {
+  var ids=['ragSoc','sede','fatt','dip','note','attivita','forma','titolare','ateco','pn','cred','mat','pers','utile','clientela','lavTerzi','massRc','albo','professione','veicoli','tipoVeicoli','km','tipoPatente','figChiave','costoSub','storico','p1','p2','p3'];
+  var d={};
+  ids.forEach(function(id){var el=document.getElementById(id);if(el) d[id]=el.value?el.value.trim():'';});
+  d.rc=toggles.rc; d.pa=toggles.pa; d.not=toggles.not; d.est=toggles.est; d.sub=toggles.sub;
+  return d;
+}
+
+function startGen() {
+  var apiKey = document.getElementById('apiKey').value.trim();
+  if(!apiKey){toast('Inserisci la chiave API nella sidebar','err');return;}
+  var d = collectData();
+  if(!d.ragSoc){toast('Inserisci almeno il nome del cliente','err');return;}
+  var cfg = PROD_CFG[prod];
+  showView('generatingView',null);
+  var steps = cfg.steps;
+  document.getElementById('g-steps').innerHTML = steps.map(function(s,i){
+    return '<div class="gs w" id="gs'+i+'"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>'+s+'</div>';
+  }).join('');
+  var durations=[1100,900,1100,900,700];
+  var i=0;
+  function nextStep(){
+    if(i>0) document.getElementById('gs'+(i-1)).className='gs d';
+    if(i<steps.length){
+      document.getElementById('gs'+i).className='gs a';
+      document.getElementById('g-pbb').style.width=Math.round(((i+1)/steps.length)*82)+'%';
+      i++;
+      setTimeout(nextStep, durations[i-1]||900);
+    }
+  }
+  nextStep();
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,messages:[{role:'user',content:buildPrompt(d)}]})
+  }).then(function(r){return r.json();}).then(function(data){
+    if(data.error) throw new Error(data.error.message);
+    var rawText = data.content&&data.content.find(function(b){return b.type==='text';})?data.content.find(function(b){return b.type==='text';}).text:'';
+    // Estrai JSON proposte
+    var proposteJson = null;
+    var text = rawText;
+    var startIdx = rawText.indexOf(JSON_START);
+    if(startIdx>-1){
+      var afterStart = rawText.indexOf('\n',startIdx)+1;
+      var endIdx = rawText.indexOf('\n'+JSON_END, afterStart);
+      if(endIdx>-1){
+        try{proposteJson=JSON.parse(rawText.slice(afterStart,endIdx).trim());}catch(e){console.warn('JSON parse err',e);}
+        text = (rawText.slice(0,startIdx)+rawText.slice(endIdx+4)).trim();
+      }
+    }
+    curAnalysis = text;
+    curProposte = proposteJson;
+    steps.forEach(function(_,j){document.getElementById('gs'+j).className='gs d';});
+    document.getElementById('g-pbb').style.width='100%';
+    document.getElementById('g-sp').style.borderTopColor='var(--greenL)';
+    var rec={id:Date.now(),prod:prod,prodName:cfg.name,prodColor:cfg.color,name:d.ragSoc,sede:d.sede,date:new Date().toLocaleDateString('it-IT'),fatt:d.fatt,analysis:text,proposte:proposteJson,premi:{p1:d.p1,p2:d.p2,p3:d.p3}};
+    analHist.unshift(rec);
+    if(analHist.length>25) analHist.pop();
+    localStorage.setItem('vgen_hist',JSON.stringify(analHist));
+    setTimeout(function(){renderOutput(d,text,cfg,proposteJson);showView('outputView',null);toast('Analisi generata','ok');},400);
+  }).catch(function(err){
+    toast('Errore: '+err.message,'err');
+    showView('formView',document.getElementById('nav-form'));
+  });
+}
+
+// ── Output ─────────────────────────────────────────────────
+function renderOutput(d, text, cfg, proposteJson) {
+  document.getElementById('o-title').textContent='Analisi — '+(d.ragSoc||'');
+  document.getElementById('o-meta').textContent=(d.sede?d.sede+' · ':'')+cfg.name+' · '+new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('anal-out').innerHTML=mdToHtml(text);
+  var disc=function(v){var n=parseInt((v||'0').replace(/\D/g,''));return n>0?Math.round(n*0.9).toLocaleString('it-IT'):'—';};
+  var colMap=['#2E5FA3','#1F3864','#C55A11'];
+  var pArr;
+  if(proposteJson&&proposteJson.length){
+    pArr=proposteJson.map(function(p,i){return{label:p.nome||(PREMI_CFG[cfg.name]?PREMI_CFG[cfg.name][i]&&PREMI_CFG[cfg.name][i].label:'Opzione '+(i+1))||'Opzione '+(i+1),col:colMap[i]||cfg.color,raw:d['p'+(i+1)]||'',features:(p.garanzie_incluse||[]).map(function(g){return{text:g,on:true};}).concat((p.garanzie_escluse||[]).map(function(g){return{text:g,on:false};})),leva:p.leva||'',isRec:p.consigliata===true};});
+  } else {
+    var prCfg=PREMI_CFG[prod]||[];
+    pArr=prCfg.map(function(p,i){return{label:p.label,col:p.col,raw:d['p'+(i+1)]||p.ph||'',features:[{text:'Garanzie incluse per questo cliente',on:true}],leva:'',isRec:i===1};});
+  }
+  document.getElementById('prop-out').style.display='none';
+  document.getElementById('prop-empty').style.display='block';
+  // Salva proposteJson per uso successivo nel modale
+  curProposte = proposteJson;
+  // Aggiorna prompt presentazione
+  updatePromptPres(d, text, cfg);
+  // Aggiorna griglia modale premi
+  renderPremiModalGrid();
+  // (Le card proposte vengono generate solo dopo inserimento premi)
+  
+
+}
+
+function mdToHtml(md){
+  return md.replace(/^# (.+)$/gm,'<h1>$1</h1>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/^[-•] (.+)$/gm,'<li>$1</li>').replace(/(<li>.*<\/li>\n?)+/g,function(s){return '<ul>'+s+'</ul>';}).replace(/\n\n/g,'</p><p>').replace(/^(?!<[hup])(.+)$/gm,'<p>$1</p>').replace(/<p><\/p>/g,'').replace(/EUR ([\d.,]+)/g,'EUR <strong>$1</strong>');
+}
+
+// ── Export PDF ─────────────────────────────────────────────
+function exportPDF(){
+  var title=document.getElementById('o-title').textContent;
+  var meta=document.getElementById('o-meta').textContent;
+  var analHtml=document.getElementById('anal-out').innerHTML;
+  var propHtml=document.getElementById('prop-out').innerHTML;
+  var cfg=PROD_CFG[prod];
+  var win=window.open('','_blank');
+  win.document.write('<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>'+title+'</title><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:\'DM Sans\',sans-serif;color:#1E293B;background:#fff}@media print{.no-print{display:none!important}}.cover{background:#1F3864;color:#fff;padding:3rem}.cover h1{font-family:\'DM Serif Display\',serif;font-size:2rem;margin-bottom:.5rem}.cover .meta{font-size:.82rem;opacity:.7;margin-top:.4rem}.cover .badge{display:inline-block;background:'+cfg.color+';color:#fff;font-size:.7rem;font-weight:600;padding:.22rem .7rem;border-radius:20px;margin-top:.7rem}.body{padding:2rem 2.5rem}.at h1{font-family:\'DM Serif Display\',serif;font-size:1.35rem;color:#1F3864;margin:1.6rem 0 .65rem;padding-bottom:.4rem;border-bottom:2px solid #E2E8F0}.at h1:first-child{margin-top:0}.at h2{font-size:.95rem;font-weight:600;color:#2E5FA3;margin:1.1rem 0 .4rem}.at h3{font-size:.88rem;font-weight:600;color:#C55A11;margin:.85rem 0 .32rem}.at p{font-size:.88rem;line-height:1.75;margin-bottom:.65rem}.at ul{margin:.4rem 0 .65rem 1.15rem}.at li{font-size:.88rem;line-height:1.65;margin-bottom:.25rem}.at strong{font-weight:600}.sec{font-size:.7rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#64748B;margin:2rem 0 1rem;padding-bottom:.45rem;border-bottom:1px solid #E2E8F0}.pg3{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;margin-bottom:2rem}.pcard{border:1px solid #E2E8F0;border-radius:12px;overflow:hidden}.pcard.rec{border-width:2px}.ph{padding:.88rem 1rem;color:#fff;position:relative}.p-badge{position:absolute;top:.5rem;right:.6rem;background:#FFC000;color:#1F3864;font-size:.6rem;font-weight:700;padding:.15rem .4rem;border-radius:4px}.p-name{font-size:.92rem;font-weight:600}.p-sub{font-size:.7rem;opacity:.8;margin-top:2px}.pb{padding:.88rem 1rem}.pf{display:flex;align-items:flex-start;gap:6px;font-size:.76rem;margin-bottom:.38rem}.pf.off{color:#94A3B8}.pf svg{width:12px;height:12px;flex-shrink:0;margin-top:2px}.pleva{margin-top:.65rem;padding:.55rem .7rem;background:rgba(255,192,0,.08);border-left:3px solid #FFC000;border-radius:0 6px 6px 0;font-size:.75rem;color:#64748B;font-style:italic}.pp2{padding:.78rem 1rem;border-top:1px solid #E2E8F0;display:flex;align-items:center;justify-content:space-between}.po{font-size:.73rem;color:#94A3B8;text-decoration:line-through}.pd2{font-size:1.12rem;font-weight:700}.pl{font-size:.66rem;color:#64748B}.pbadge2{background:rgba(197,90,17,.1);color:#C55A11;font-size:.66rem;font-weight:600;padding:.15rem .42rem;border-radius:4px}.footer{margin-top:2rem;padding:1rem 2.5rem;border-top:1px solid #E2E8F0;font-size:.7rem;color:#94A3B8;display:flex;justify-content:space-between}.print-btn{position:fixed;bottom:1.5rem;right:1.5rem;background:#1F3864;color:#fff;border:none;padding:.72rem 1.4rem;border-radius:8px;font-size:.88rem;font-weight:500;cursor:pointer;font-family:\'DM Sans\',sans-serif;box-shadow:0 4px 12px rgba(0,0,0,.2)}</style></head><body><button class="print-btn no-print" onclick="window.print()">Stampa / Salva PDF</button><div class="cover"><h1>'+title.replace('Analisi — ','')+'</h1><div class="meta">'+meta+'</div><div class="badge">'+cfg.name+'</div></div><div class="body"><div class="at">'+analHtml+'</div><div class="sec">Le 3 proposte</div><div class="pg3">'+propHtml+'</div></div><div class="footer"><span>Analisi consulenziale riservata · Vittoria Assicurazioni</span><span>Generata il '+new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'})+'</span></div></body></html>');
+  win.document.close();
+}
+
+// ── History ─────────────────────────────────────────────────
+function renderHist(){
+  var el=document.getElementById('stor-content');
+  if(!analHist.length){el.innerHTML='<div class="h-empty"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" width="38" height="38" style="margin:0 auto .7rem;display:block"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Nessuna analisi ancora generata</div>';return;}
+  el.innerHTML='<div class="h-list">'+analHist.map(function(r){return '<div class="hi"><div class="hi-info"><div class="hi-name">'+r.name+'</div><div class="hi-meta"><span class="hi-prod" style="background:'+(r.prodColor||'#2E5FA3')+'">'+(r.prodName||r.prod)+'</span>'+(r.sede?r.sede+' · ':'')+r.date+(r.fatt?' · EUR '+Number(r.fatt).toLocaleString('it-IT'):'')+'</div></div><div class="hi-acts"><button class="ib" onclick="loadHist('+r.id+')" title="Riapri"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button><button class="ib" onclick="copyHist('+r.id+')" title="Copia"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg></button><button class="ib" onclick="delHist('+r.id+')" title="Elimina" style="color:var(--red)"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></div>';}).join('')+'</div>';
+}
+
+function loadHist(id){
+  var r=analHist.find(function(x){return x.id===id;}); if(!r) return;
+  curAnalysis=r.analysis; curProposte=r.proposte||null;
+  var cfg=PROD_CFG[r.prod]||PROD_CFG.azienda;
+  renderOutput({ragSoc:r.name,sede:r.sede,fatt:r.fatt,p1:r.premi.p1,p2:r.premi.p2,p3:r.premi.p3},r.analysis,cfg,r.proposte||null);
+  document.getElementById('o-title').textContent='Analisi — '+r.name;
+  document.getElementById('o-meta').textContent=r.date+' · '+r.prodName;
+  showView('outputView',null);
+}
+
+function copyHist(id){var r=analHist.find(function(x){return x.id===id;});if(r){navigator.clipboard.writeText(r.analysis);toast('Copiata');}}
+function delHist(id){analHist=analHist.filter(function(x){return x.id!==id;});localStorage.setItem('vgen_hist',JSON.stringify(analHist));renderHist();}
+function clearHist(){if(!confirm('Svuotare lo storico?'))return;analHist=[];localStorage.setItem('vgen_hist','[]');renderHist();}
+function copyAnal(){navigator.clipboard.writeText(curAnalysis);toast('Analisi copiata','ok');}
+
+function resetForm(){
+  document.querySelectorAll('#formView input,#formView textarea,#formView select').forEach(function(el){if(el.type!=='file')el.value='';if(el.tagName==='SELECT')el.selectedIndex=0;});
+  document.getElementById('pdf-badge').style.display='none';
+  var uz=document.getElementById('uz'); uz.classList.remove('hf');
+  document.getElementById('ut').textContent='Trascina il PDF del bilancio o clicca per selezionare';
+  toggles={rc:true,pa:false,not:false,est:false,sub:false};
+  renderFormFields();
+}
+
+function openHelp(){document.getElementById('help-modal').style.display='flex';}
+function closeHelp(){document.getElementById('help-modal').style.display='none';}
+
+function toast(msg,type){
+  var c=document.getElementById('toast-c');
+  var t=document.createElement('div'); t.className='toast '+(type==='ok'?'ok':type==='err'?'err':'');
+  t.textContent=msg; c.appendChild(t); setTimeout(function(){t.remove();},3200);
+}
+
+// ── Drag & drop ────────────────────────────────────────────
+var uzEl=document.getElementById('uz');
+uzEl.addEventListener('dragover',function(e){e.preventDefault();uzEl.classList.add('drag');});
+uzEl.addEventListener('dragleave',function(){uzEl.classList.remove('drag');});
+uzEl.addEventListener('drop',function(e){e.preventDefault();uzEl.classList.remove('drag');var f=e.dataTransfer.files[0];if(f&&f.type==='application/pdf'){document.getElementById('pdfIn').files=e.dataTransfer.files;handlePdf({target:{files:e.dataTransfer.files}});}});
+
+// ── Persist API key ────────────────────────────────────────
+var saved=localStorage.getItem('vgen_key'); if(saved) document.getElementById('apiKey').value=saved;
+document.getElementById('apiKey').addEventListener('change',function(e){localStorage.setItem('vgen_key',e.target.value);});
+
+// ── Funzioni proposte e prompt ───────────────────────────────
+function openPremiModal() {
+  renderPremiModalGrid();
+  document.getElementById('premi-modal').style.display='flex';
+}
+function closePremiModal() {
+  document.getElementById('premi-modal').style.display='none';
+}
+
+function renderPremiModalGrid() {
+  var cfg = PROD_CFG[prod];
+  var prCfg = PREMI_CFG[prod]||[];
+  document.getElementById('premi-modal-grid').innerHTML = prCfg.map(function(p,i){
+    return '<div class="pc" style="'+(i===1?'border-color:var(--gold)':'')+'"><div class="pkl"><span class="pd" style="background:'+p.col+'"></span>'+p.label+'</div><div style="display:flex;align-items:baseline"><span class="ep">EUR</span><input type="number" id="mp'+(i+1)+'" placeholder="'+(p.ph||'—')+'"></div></div>';
+  }).join('');
+}
+
+function generaProposte() {
+  var apiKey = document.getElementById('apiKey').value.trim();
+  if(!apiKey){toast('Inserisci la chiave API','err');return;}
+  var premi = [1,2,3].map(function(i){
+    var el=document.getElementById('mp'+i); return el?el.value.trim():'';
+  });
+  if(!premi[0]&&!premi[1]&&!premi[2]){toast('Inserisci almeno un premio','err');return;}
+  closePremiModal();
+  // Aggiorna i dati premi correnti
+  curPremi = premi;
+  // Se abbiamo già le proposte dal JSON, usale con i premi aggiornati
+  if(curProposte && curProposte.length) {
+    renderProposteCards(curProposte, premi);
+    return;
+  }
+  // Altrimenti genera le proposte via API
+  toast('Generazione proposte...','');
+  var d = collectData();
+  var cfg = PROD_CFG[prod];
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,
+      messages:[{role:'user',content:'Basandoti su questa analisi:\n'+curAnalysis+'\n\n'+buildJsonInstruction()+
+        '\nPremi preventivati: Opzione1=EUR '+(premi[0]||'n.d.')+', Opzione2=EUR '+(premi[1]||'n.d.')+', Opzione3=EUR '+(premi[2]||'n.d.')+
+        '\nRispondi SOLO con il blocco json-proposte, nulla altro.'}]})
+  }).then(function(r){return r.json();}).then(function(data){
+    var rawText = data.content&&data.content.find(function(b){return b.type==='text';})?data.content.find(function(b){return b.type==='text';}).text:'';
+    var proposteJson = null;
+    var startIdx = rawText.indexOf(JSON_START);
+    if(startIdx>-1){
+      var afterStart = rawText.indexOf('\n',startIdx)+1;
+      var endIdx = rawText.indexOf('\n'+JSON_END, afterStart);
+      if(endIdx>-1){
+        try{proposteJson=JSON.parse(rawText.slice(afterStart,endIdx).trim());}catch(e){console.warn(e);}
+      }
+    }
+    if(proposteJson) { curProposte=proposteJson; renderProposteCards(proposteJson, premi); }
+    else toast('Errore generazione proposte','err');
+  }).catch(function(err){toast('Errore: '+err.message,'err');});
+}
+
+function renderProposteCards(proposteJson, premi) {
+  var cfg = PROD_CFG[prod];
+  var colMap=['#2E5FA3','#1F3864','#C55A11'];
+  var disc=function(v){var n=parseInt((v||'0').replace(/\D/g,''));return n>0?Math.round(n*0.9).toLocaleString('it-IT'):'—';};
+  document.getElementById('prop-cards').innerHTML = proposteJson.map(function(p,i){
+    var col=colMap[i]||cfg.color;
+    var raw=premi[i]||'';
+    var isRec=p.consigliata===true;
+    var feats=(p.garanzie_incluse||[]).map(function(g){return {text:g,on:true};}).concat((p.garanzie_escluse||[]).map(function(g){return {text:g,on:false};}));
+    return '<div class="pcard'+(isRec?' rec':'')+'" style="'+(isRec?'border-color:'+col:'')+'">'+
+      '<div class="ph" style="background:'+col+'">'+(isRec?'<div class="p-badge">CONSIGLIATA</div>':'')+
+      '<div class="p-name">'+(p.nome||'Opzione '+(i+1))+'</div>'+
+      '<div class="p-sub">'+cfg.name+'</div></div>'+
+      '<div class="pb">'+feats.map(function(f){
+        return '<div class="pf'+(f.on?'':' off')+'"><svg fill="none" stroke="'+(f.on?(isRec?'#FFC000':col):'#94A3B8')+'" stroke-width="2.5" viewBox="0 0 24 24">'+(f.on?'<path d="M5 13l4 4L19 7"/>':'<path d="M6 18L18 6M6 6l12 12"/>')+'</svg>'+f.text+'</div>';
+      }).join('')+(p.leva?'<div class="pleva">'+p.leva+'</div>':'')+
+      '</div><div class="pp2"><div>'+
+      '<div class="po">'+(raw?'EUR '+Number(raw).toLocaleString('it-IT')+' /anno':'')+'</div>'+
+      '<div class="pd2" style="color:'+col+'">EUR '+disc(raw)+' /anno</div>'+
+      '<div class="pl">'+(raw?'con sconto 10%':'da preventivare')+'</div></div>'+
+      (raw?'<div class="pbadge2">-10%</div>':'')+
+      '</div></div>';
+  }).join('');
+  document.getElementById('prop-empty').style.display='none';
+  document.getElementById('prop-out').style.display='block';
+  toast('Proposte generate','ok');
+}
+
+function updatePromptPres(d, text, cfg) {
+  var clientName = d.ragSoc||'Cliente';
+  var sede = d.sede||'';
+  var fatt = d.fatt?'EUR '+Number(d.fatt).toLocaleString('it-IT'):'n.d.';
+  var dip = d.dip||'n.d.';
+  var prompt = 'Sei un consulente assicurativo senior specializzato in Vittoria ' + cfg.name + '.\n\n' +
+    'PROFILO CLIENTE:\n' +
+    '- Azienda: ' + clientName + (sede?' — '+sede:'') + '\n' +
+    '- Fatturato: ' + fatt + ' | Dipendenti: ' + dip + '\n\n' +
+    'ANALISI CONSULENZIALE ELABORATA:\n' +
+    text + '\n\n' +
+    'OBIETTIVO:\n' +
+    'Crea una presentazione commerciale professionale in 7 slide per un appuntamento con ' + clientName + '. ' +
+    'La presentazione deve seguire questa struttura:\n' +
+    '1. COPERTINA — titolo "La tua azienda ha un avvocato?", dati chiave cliente\n' +
+    '2. SITUAZIONE ATTUALE — cosa copre la RC e cosa NON copre (spese legali)\n' +
+    '3. I RISCHI REALI — 5 scenari concreti con costi stimati, ancorati ai dati del cliente\n' +
+    '4. LE GARANZIE — garanzie incluse già nell'opzione base, con esempi pratici per questo settore\n' +
+    '5. ESTENSIONI CHIAVE — garanzie aggiuntive con esempi reali per questo tipo di azienda\n' +
+    '6. TAVOLA COMPARATIVA — le 3 opzioni a confronto con garanzie e premi\n' +
+    '7. CALL TO ACTION — offerta con sconto 10%, bottone "Richiedi preventivo ufficiale"\n\n' +
+    'STILE: professionale ma accessibile, dati concreti, frasi brevi, orientato al valore percepito dall'imprenditore.\n' +
+    'FORMATO OUTPUT: descrivi ogni slide con titolo, contenuto testuale e layout consigliato.';
+  document.getElementById('prompt-pres-text').textContent = prompt;
+  curPromptPres = prompt;
+}
+
+function copyPromptPres() {
+  if(!curPromptPres){toast('Genera prima un analisi','err');return;}
+  navigator.clipboard.writeText(curPromptPres);
+  toast('Prompt copiato — incollalo su Claude.ai','ok');
+}
+
+// ── Init ───────────────────────────────────────────────────
+renderFormFields();
+</script>
+</body>
+</html>
